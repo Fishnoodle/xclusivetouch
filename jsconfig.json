@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "xclusivetouch",
+    "baseUrl": "",
     "paths": {
       "@/components/*": ["components/*"]
     }
