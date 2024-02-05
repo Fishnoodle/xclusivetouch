@@ -23,7 +23,7 @@ const HowItWorks = () => {
             <p className="text-2xl font-semibold text-white">1. Tap or Scan Card</p>
             <div className="flex items-center gap-2">
               <p className="text-white">
-                XlclusiveTouch works on all devices via NFC.
+                XclusiveTouch works on all devices via NFC.
               </p>
             </div>
          
