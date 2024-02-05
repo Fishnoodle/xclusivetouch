@@ -1,38 +1,72 @@
 import React from "react";
-import { BsFacebook, BsInstagram, BsTwitter } from "react-icons/bs";
+import { FaInstagram } from "react-icons/fa";
+import { FaTwitter } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
 
-const Footer = () => {
-  return (
-    <div className="container mx-auto my-10">
-      <div className="bg-[#f8fafe] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 lg:gap-10 px-10 py-10 rounded-3xl items-center justify-center ">
-        <div className="flex flex-col items-center lg:items-start gap-5">
-          <img src="/assets/footerlogo.svg" alt="footer lgo" />
-          <br/>
-        </div>
-        <div className="flex flex-col items-center lg:items-start gap-5">
-          <p className="text-xl font-medium">Xclusive</p>
-          <p className="text-base">How It Works</p>
-          <p className="text-base">Login</p>
-          <p className="text-base">Sign Up</p>
-        </div>
-        <div className="flex flex-col items-center lg:items-start gap-5">
-          <p className="text-xl font-medium">Company</p>
-          <p className="text-base">About Us</p>
-        </div>
-        <div className="flex flex-col items-center lg:items-start gap-5">
-          <p className="text-xl font-medium">Help and Support</p>
-          <p className="text-base">Contact</p>
-          <p className="text-base">Privacy policy</p>
-          <p className="text-base">Terms & Conditions</p>
-        </div>
-        <div className="flex items-center gap-5">
-                <BsFacebook className="text-3xl text-gray-500"/>
-                <BsTwitter className="text-3xl text-gray-500"/>
-                <BsInstagram className="text-3xl text-gray-500"/>
-        </div>
-      </div>
-    </div>
-  );
-};
+function Footer() {
+	return (
+		<footer>
+			<div className="bg-[#071013] h-1/2 w-full flex md:flex-row flex-col justify-around items-start p-20 rounded-t-3xl">
+				<div className="p-5 ">
+					<ul>
+						<p className="text-gray-200 font-bold text-3xl pb-6">
+							Xclusive<span className="text-[#D4AF37]">Touch</span>
+						</p>
+						<div className="flex gap-6 pb-5">
+							<FaInstagram className="text-2xl cursor-pointer text-white hover:text-yellow-600" />
+							<FaTwitter className="text-2xl cursor-pointer text-white hover:text-blue-600" />
+							<FaLinkedin className="text-2xl cursor-pointer text-white hover:text-blue-600" />
+							<FaYoutube className="text-2xl cursor-pointer text-white hover:text-red-600" />
+						</div>
+					</ul>
+				</div>
+				<div className="p-5">
+					<ul>
+						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Xclusive</p>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+							How It Works
+						</li>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+							Login
+						</li>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+							Sign Up
+						</li>
+
+					</ul>
+				</div>
+				<div className="p-5">
+					<ul>
+						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Company</p>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+							About
+						</li>
+					</ul>
+				</div>
+				<div className="p-5">
+					<ul>
+						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Support</p>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+							Contact
+						</li>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+							Privacy Policy
+						</li>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+							Terms of Service
+						</li>
+					</ul>
+				</div>
+                
+			</div>
+			<div className="flex flex-col justify-center items-center text-center p-5 bg-[#071013]">
+				<h1 className=" text-white font-semibold">
+					© 2024 All rights reserved | SP Designs
+				</h1>
+			</div>
+		</footer>
+	);
+}
 
 export default Footer;
