@@ -15,7 +15,6 @@ const Hero = () => {
             </p>
             <button className="btn btn-sm lg:btn-lg bg-[#D4AF37] text-white rounded-lg border-none w-36 lg:w-44 capitalize py-3">Contact Us</button>
           </div>
-          {/* <img src="/assets/hero.png" alt="" /> */}
           <Image
             src='/assets/hero.png'
             width={750}

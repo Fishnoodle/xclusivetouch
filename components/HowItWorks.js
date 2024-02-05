@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 
 const HowItWorks = () => {
     return(
@@ -12,7 +13,13 @@ const HowItWorks = () => {
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-16 py-10 lg:py-20">
           <div className="flex flex-col gap-5 ">
-            <img src="/assets/hiw1.png" alt="v1" className='rounded-xl'/>
+            <Image
+            src='/assets/hiw1.png'
+            width={800}
+            height={800}
+            alt='Picture of HowItWorks'
+            className='rounded-3xl'
+            />
             <p className="text-2xl font-semibold text-white">1. Tap or Scan Card</p>
             <div className="flex items-center gap-2">
               <p className="text-white">
@@ -22,7 +29,13 @@ const HowItWorks = () => {
          
           </div>
           <div className="flex flex-col gap-5 ">
-          <img src="/assets/hiw2.png" alt="v1" className='rounded-xl' />
+          <Image
+            src='/assets/hiw2.png'
+            width={800}
+            height={800}
+            alt='Picture of HowItWorks'
+            className='rounded-3xl'
+            />
             <p className="text-2xl font-semibold text-white">2. Create Engagement</p>
             <div className="flex items-center gap-2">
               <p className="text-white">
@@ -32,7 +45,13 @@ const HowItWorks = () => {
          
           </div>
           <div className="flex flex-col gap-5 ">
-            <img src="/assets/hiw3.png" alt="v1" className='rounded-xl' />
+          <Image
+            src='/assets/hiw3.png'
+            width={800}
+            height={800}
+            alt='Picture of HowItWorks'
+            className='rounded-3xl'
+            />
             <p className="text-2xl font-semibold text-white">3. Start Networking</p>
             <div className="flex items-center gap-2">
               <p className="text-white">
