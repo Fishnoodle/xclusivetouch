@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 
 // Components
 import HowItWorks from '@/components/HowItWorks';
-import NavBar from '@/components/NavBar'
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import { Reviews } from "@/components/Reviews";
@@ -21,7 +20,6 @@ export default function Home() {
       <Head>
         <title>Xclusive Touch</title>
       </Head>
-      <NavBar />
       <Hero/>
       <BentoBox/>
 

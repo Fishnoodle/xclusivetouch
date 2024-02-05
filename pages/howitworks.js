@@ -4,7 +4,6 @@ import { Inter } from  'next/font/google';
 
 // Components
 import Footer from "@/components/Footer";
-import Navbar from '@/components/NavBar';
 import FAQ from '@/components/FAQ';
 import HowItWorksPage from "@/components/HowItWorksPage";
 
@@ -16,7 +15,6 @@ export default function HowItWorks() {
             <Head>
                 <title>Xclusive Touch</title>
             </Head>
-            <Navbar/>
             <HowItWorksPage/>
 
             <FAQ/>
