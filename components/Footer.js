@@ -1,4 +1,5 @@
 import React from "react";
+import Link from 'next/link'
 import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
@@ -14,10 +15,18 @@ function Footer() {
 							Xclusive<span className="text-[#D4AF37]">Touch</span>
 						</p>
 						<div className="flex gap-6 pb-5">
+							<Link href=''>
 							<FaInstagram className="text-2xl cursor-pointer text-white hover:text-yellow-600" />
+							</Link>
+							<Link href=''>
 							<FaTwitter className="text-2xl cursor-pointer text-white hover:text-blue-600" />
+							</Link>
+							<Link href=''>
 							<FaLinkedin className="text-2xl cursor-pointer text-white hover:text-blue-600" />
+							</Link>
+							<Link href=''>
 							<FaYoutube className="text-2xl cursor-pointer text-white hover:text-red-600" />
+							</Link>
 						</div>
 					</ul>
 				</div>
@@ -25,7 +34,7 @@ function Footer() {
 					<ul>
 						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Xclusive</p>
 						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
-							How It Works
+							<Link href='howitworks'>How It Works</Link>
 						</li>
 						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
 							Login
@@ -40,7 +49,7 @@ function Footer() {
 					<ul>
 						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Company</p>
 						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
-							About
+							<Link href='about'>About Us</Link>
 						</li>
 					</ul>
 				</div>
