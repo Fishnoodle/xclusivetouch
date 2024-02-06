@@ -15,7 +15,7 @@ const FAQ = () => {
     <div className="container mx-auto py-10">
 
         <div className="mx-auto md:text-center py-10">
-          <h1 className="mx-auto max-w-4xl font-display text-4xl font-bold tracking-normal text-slate-900 sm:text-6xl">
+          <h1 className="mx-auto max-w-4xl font-display text-3xl font-bold tracking-normal text-slate-900 sm:text-5xl">
             Frequently Asked Questions
           </h1>
         </div>

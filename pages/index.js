@@ -21,7 +21,7 @@ export default function Home() {
         <title>Xclusive Touch</title>
       </Head>
       <Hero/>
-      <BentoBox/>
+      {/*<BentoBox/>*/}
 
       <HowItWorks/>
       <Reviews/>

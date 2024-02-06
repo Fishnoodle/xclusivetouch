@@ -4,6 +4,7 @@ import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
+import Image from 'next/image'
 
 function Footer() {
 	return (
@@ -11,9 +12,12 @@ function Footer() {
 			<div className="bg-[#071013] h-1/2 w-full flex md:flex-row flex-col justify-around items-start p-20 rounded-t-3xl">
 				<div className="p-5 ">
 					<ul>
-						<p className="text-gray-200 font-bold text-3xl pb-6">
-							Xclusive<span className="text-[#D4AF37]">Touch</span>
-						</p>
+						<Image
+							src='/assets/logo.png'
+							width={200}
+							height={200}
+							alt='Picture of Hero Page'
+         				 />
 						<div className="flex gap-6 pb-5">
 							<Link href=''>
 							<FaInstagram className="text-2xl cursor-pointer text-white hover:text-yellow-600" />

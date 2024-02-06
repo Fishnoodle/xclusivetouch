@@ -5,12 +5,11 @@ const HowItWorks = () => {
     return(
       <div className='bg-[#071013] rounded-3xl'>
         <div className="container mx-auto py-10">
-        <p className="text-base lg:text-xl font-medium text-white uppercase">
-         XlclusiveTouch
-        </p>
-        <p className="text-3xl lg:text-5xl font-semibold text-white  mt-3">
-        How It Works
-        </p>
+          <div className='mx-auto md:text-center'>
+            <p className="text-3xl lg:text-5xl font-semibold text-[#F6F8FF]  mt-3">
+              How It Works
+            </p>
+          </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-16 py-10 lg:py-20">
           <div className="flex flex-col gap-5 ">
             <Image
@@ -20,9 +19,9 @@ const HowItWorks = () => {
             alt='Picture of HowItWorks'
             className='rounded-3xl'
             />
-            <p className="text-2xl font-semibold text-white">1. Tap or Scan Card</p>
+            <p className="text-2xl font-semibold text-[#F6F8FF]">1. Tap or Scan Card</p>
             <div className="flex items-center gap-2">
-              <p className="text-white">
+              <p className="text-[#F6F8FF]">
                 XclusiveTouch works on all devices via NFC.
               </p>
             </div>
@@ -36,9 +35,9 @@ const HowItWorks = () => {
             alt='Picture of HowItWorks'
             className='rounded-3xl'
             />
-            <p className="text-2xl font-semibold text-white">2. Create Engagement</p>
+            <p className="text-2xl font-semibold text-[#F6F8FF]">2. Create Engagement</p>
             <div className="flex items-center gap-2">
-              <p className="text-white">
+              <p className="text-[#F6F8FF]">
                 Profiles can be customize to your needs, creating engaging and an interactive experience for your users
               </p>
             </div>
@@ -52,9 +51,9 @@ const HowItWorks = () => {
             alt='Picture of HowItWorks'
             className='rounded-3xl'
             />
-            <p className="text-2xl font-semibold text-white">3. Start Networking</p>
+            <p className="text-2xl font-semibold text-[#F6F8FF]">3. Start Networking</p>
             <div className="flex items-center gap-2">
-              <p className="text-white">
+              <p className="text-[#F6F8FF]">
                 Make it easier to connect with people by saving your contact details, as well as sharing information seamlessly
               </p>
             </div>
