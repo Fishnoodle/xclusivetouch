@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
+
 const HowItWorks = () => {
     return(
       <div className='bg-[#071013] rounded-3xl'>
@@ -13,11 +14,11 @@ const HowItWorks = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-16 py-10 lg:py-20">
           <div className="flex flex-col gap-5 ">
             <Image
-            src='/assets/hiw1.png'
-            width={800}
-            height={800}
+            src='/assets/HowItWorks1.png'
+            width={400}
+            height={400}
             alt='Picture of HowItWorks'
-            className='rounded-3xl'
+            className='rounded-3xl h-[400px]'
             />
             <p className="text-2xl font-semibold text-[#F6F8FF]">1. Tap or Scan Card</p>
             <div className="flex items-center gap-2">
@@ -29,11 +30,11 @@ const HowItWorks = () => {
           </div>
           <div className="flex flex-col gap-5 ">
           <Image
-            src='/assets/hiw2.png'
-            width={800}
-            height={800}
+            src='/assets/HowItWorks2.png'
+            width={400}
+            height={400}
             alt='Picture of HowItWorks'
-            className='rounded-3xl'
+            className='rounded-3xl h-[400px]'
             />
             <p className="text-2xl font-semibold text-[#F6F8FF]">2. Create Engagement</p>
             <div className="flex items-center gap-2">
@@ -45,11 +46,11 @@ const HowItWorks = () => {
           </div>
           <div className="flex flex-col gap-5 ">
           <Image
-            src='/assets/hiw3.png'
-            width={800}
-            height={800}
+            src='/assets/HowItWorks3.png'
+            width={400}
+            height={400}
             alt='Picture of HowItWorks'
-            className='rounded-3xl'
+            className='rounded-3xl h-[400px]'
             />
             <p className="text-2xl font-semibold text-[#F6F8FF]">3. Start Networking</p>
             <div className="flex items-center gap-2">
