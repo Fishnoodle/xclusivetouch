@@ -1,9 +1,8 @@
 import React from "react";
 import Link from 'next/link'
 import { FaInstagram } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
 import { FaTiktok } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
 import Image from 'next/image'
 
 function Footer() {
@@ -26,7 +25,7 @@ function Footer() {
 							<FaTiktok className="text-2xl cursor-pointer text-white hover:text-[#D4AF37]" />
 							</Link>
 							<Link href='https://www.facebook.com/xclusive.touch23?mibextid=ZbWKwL' target="_blank">
-							<FaYoutube className="text-2xl cursor-pointer text-white hover:text-[#D4AF37]" />
+							<FaFacebook className="text-2xl cursor-pointer text-white hover:text-[#D4AF37]" />
 							</Link>
 						</div>
 					</ul>
