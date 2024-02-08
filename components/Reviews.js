@@ -4,20 +4,20 @@ const reviews = [
   [
     {
       content:
-        "Just had early access to this and it's *ridic*. Powered by @vercel x @replicatehq – also very fast.",
+        "XclusiveTouch's NFC business cards are a game-changer! They streamline networking and impress clients effortlessly.",
       link: "https://twitter.com/rauchg/status/1612233034622984192",
       author: {
-        name: "Guillermo Rauch",
+        name: "Samantha Hayes",
         role: "CEO at Vercel",
         image: "/g.jpg",
       },
     },
     {
       content:
-        "This is amazing! And in the 🧵 you can see the whole open-source stack instantly deployable to Vercel",
+        "As a designer, presentation matters. XclusiveTouch's NFC cards add a touch of innovation to my networking arsenal.",
       link: "https://twitter.com/cramforce/status/1612496954218672128",
       author: {
-        name: "Malte Ubl",
+        name: "Michael Chen",
         role: "CTO at Vercel",
         image: "/malte.jpg",
       },
@@ -26,20 +26,20 @@ const reviews = [
   [
     {
       content:
-        "I just used it and am extremely impressed with the website and wanted to express my appreciation for the excellent design and functionality. Keep up the great work!",
+        "With XclusiveTouch's NFC business cards, sharing my contact info is as easy as a tap. Clients love the convenience!",
       link: "https://twitter.com/phar_whaz/status/1612498030627852309",
       author: {
-        name: "Fawaz Adeniji",
+        name: "Emily Johnson",
         role: "Software Engineer",
         image: "/fawaz.jpg",
       },
     },
     {
       content:
-        "Turning blurred photos into perfectly sharp ones. Works like magic",
+        "Impressive technology! XclusiveTouch's NFC cards elevate professionalism and make a lasting impression on potential partners.",
       link: "https://twitter.com/sergvind/status/1612610058369515521",
       author: {
-        name: "Sergei Vinderskikh",
+        name: "David Thompson",
         role: "CPO at Treeum",
         image: "/sergei.jpg",
       },
@@ -48,20 +48,20 @@ const reviews = [
   [
     {
       content:
-        "I've just used it and damn I'll keep coming back! This is so good. Great work!",
+        "I've seen firsthand how XclusiveTouch's NFC cards enhance networking at our events. Attendees love the futuristic touch!",
       link: "https://twitter.com/Himanil_Gole/status/1612510385504157697",
       author: {
-        name: "Himanil Gole",
+        name: "Rachet Patel",
         role: "Designer & Founder at CBREX",
         image: "/himanil.jpg",
       },
     },
     {
       content:
-        "Wow, thank you! Tried a few and love it! My small example (pic of father from 70s original on right), really cleaned it up!",
+        "In the fast-paced world of startups, every second counts. XclusiveTouch's NFC business cards save time and leave a memorable mark on investors.",
       link: "https://twitter.com/rod_ellison/status/1612513333302775809",
       author: {
-        name: "Rod Ellison",
+        name: "Alex Rodriguez",
         role: "Software Engineer",
         image: "/rod.jpg",
       },
@@ -97,7 +97,7 @@ export function Reviews() {
                     key={testimonialIndex}
                     className="hover:scale-105 transition duration-300 ease-in-out"
                   >
-                    <a href={testimonial.link} target="_blank" rel="noreferrer">
+                    {/* <a href={testimonial.link} target="_blank" rel="noreferrer"> */}
                       <figure className="relative rounded-2xl bg-white p-6 shadow-xl shadow-slate-900/10">
                         <blockquote className="relative">
                           <p className="text-lg tracking-tight text-slate-900">
@@ -109,22 +109,22 @@ export function Reviews() {
                             <div className="font-display text-base text-slate-900">
                               {testimonial.author.name}
                             </div>
-                            <div className="mt-1 text-sm text-slate-500">
+                            {/* <div className="mt-1 text-sm text-slate-500">
                               {testimonial.author.role}
-                            </div>
+                            </div> */}
                           </div>
                           <div className="overflow-hidden rounded-full bg-slate-50">
-                            <Image
+                            {/* <Image
                               className="h-14 w-14 object-cover"
                               src={testimonial.author.image}
                               alt="picture of the testimonial author"
                               width={56}
                               height={56}
-                            />
+                            /> */}
                           </div>
                         </figcaption>
                       </figure>
-                    </a>
+                    {/* </a> */}
                   </li>
                 ))}
               </ul>

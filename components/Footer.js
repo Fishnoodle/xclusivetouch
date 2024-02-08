@@ -2,7 +2,7 @@ import React from "react";
 import Link from 'next/link'
 import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa";
+import { FaTiktok } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import Image from 'next/image'
 
@@ -19,17 +19,14 @@ function Footer() {
 							alt='Picture of Hero Page'
          				 />
 						<div className="flex gap-6 pb-5">
-							<Link href=''>
+							<Link href='https://www.instagram.com/xclusivetouch23?igsh=MTl6M29ncTdsamxsNA==' target="_blank">
 							<FaInstagram className="text-2xl cursor-pointer text-white hover:text-yellow-600" />
 							</Link>
-							<Link href=''>
-							<FaTwitter className="text-2xl cursor-pointer text-white hover:text-blue-600" />
+							<Link href='https://www.tiktok.com/@xclusivetouch23?_t=8jhM3zJFR7F&_r=1' target="_blank">
+							<FaTiktok className="text-2xl cursor-pointer text-white hover:text-[#D4AF37]" />
 							</Link>
-							<Link href=''>
-							<FaLinkedin className="text-2xl cursor-pointer text-white hover:text-blue-600" />
-							</Link>
-							<Link href=''>
-							<FaYoutube className="text-2xl cursor-pointer text-white hover:text-red-600" />
+							<Link href='https://www.facebook.com/xclusive.touch23?mibextid=ZbWKwL' target="_blank">
+							<FaYoutube className="text-2xl cursor-pointer text-white hover:text-[#D4AF37]" />
 							</Link>
 						</div>
 					</ul>
@@ -37,13 +34,13 @@ function Footer() {
 				<div className="p-5">
 					<ul>
 						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Xclusive</p>
-						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
 							<Link href='howitworks'>How It Works</Link>
 						</li>
-						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
 							Login
 						</li>
-						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
 							Sign Up
 						</li>
 
@@ -52,7 +49,7 @@ function Footer() {
 				<div className="p-5">
 					<ul>
 						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Company</p>
-						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
 							<Link href='about'>About Us</Link>
 						</li>
 					</ul>
@@ -60,13 +57,13 @@ function Footer() {
 				<div className="p-5">
 					<ul>
 						<p className="text-gray-200 font-bold text-2xl pb-4 underline decoration-[#D4AF37]">Support</p>
-						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
 							Contact
 						</li>
-						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
 							Privacy Policy
 						</li>
-						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
 							Terms of Service
 						</li>
 					</ul>

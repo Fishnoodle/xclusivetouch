@@ -16,6 +16,7 @@ const Navbar = () => {
   const [nav, setNav] = useState(false);
 
   const handleNav = () => {
+    console.log(nav)
     setNav(!nav);
   };
 
@@ -44,10 +45,14 @@ const Navbar = () => {
         </h1>
         <ul className="hidden lg:inline-flex items-center gap-8 uppercase text-sm font-semibold">
           <li className="navbarLi">
-            <Link href='howitworks'>how it works</Link>
+            <Link href='howitworks' className="hover:text-[#D4AF37]">
+              how it works
+            </Link>
           </li>
           <li className="navbarLi">
-            <Link href='about'>about us</Link>
+            <Link href='about' className="hover:text-[#D4AF37]">
+              about us
+            </Link>
           </li>
         </ul>
         <div className="hidden lg:inline-flex gap-8 items-center">
@@ -100,28 +105,33 @@ const Navbar = () => {
       </Dialog>
       </div>
 
-      <div className={nav ? 'md:hidden fixed left-0 top-0 w-full h-screen bg-[#071013]/70' : ''}>
+      <div className={nav ? 'md:hidden fixed left-0 top-0 w-full h-screen bg-[#071013]/70 display block z-10' : ''}>
         <div className={
           nav
-          ? 'fixed left-0 top-0 w-[75%] sm:w-[60%] md:w-[45%] h-screen bg-[#071013] p-10 ease-in duration-500 rounded-xl'
-          : 'fixed left-[-100%] top-0 p-10 ease-in duration-500'
+          ? 'fixed left-0 top-0 w-[75%] sm:w-[60%] md:w-[45%] h-screen bg-[#071013] p-10 ease-in duration-500 rounded-xl z-100'
+          : 'fixed left-[-100%] h-screen top-0 p-10 ease-in duration-500'
         }
         >
           <div className="flex w-full items-center justify-between">
-          <h1 className="text-xl uppercase font-bold">
-            xclusivetouch
-          </h1>
-            <div onClick={handleNav} className="rounded-full p-3 cursor-pointer">
+            <Link href='/'>
+              <Image
+                src='/assets/logo.png'
+                width={150}
+                height={150}
+                alt='Picture of Hero Page'
+              />
+            </Link>
+            <div onClick={handleNav} className="text-3xl p-1 pb-3 cursor-pointer">
               <AiOutlineClose />
             </div>
           </div>
-          <div className="py-4 flex flex-col">
-            <ul className="uppercase">
-              <li onClick={()=> setNav(false)} className="navbarLi">
-                <Link href='howitworks' >how it works</Link>
+          <div className="py-8 flex flex-col">
+            <ul className="uppercase py-8 font-semibold">
+              <li onClick={()=> setNav(false)} className="">
+                <Link href='howitworks'> how it works </Link>
               </li>
-              <li onClick={()=> setNav(false)} className="navbarLi">
-                <Link href='about'>about us</Link>
+              <li onClick={()=> setNav(false)} className="py-8">
+                <Link href='about'> about us </Link>
               </li>  
             </ul>
           </div>

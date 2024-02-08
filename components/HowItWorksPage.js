@@ -16,7 +16,7 @@ const HowItWorksPage = () => {
           />
           <div className="flex flex-col gap-5 lg:gap-10">
             <p className=" text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-medium uppercase">
-            Effortless Networking
+            Effortless <span className='text-[#D4AF37]'> Networking </span>
             </p>
             <p className="text-sm sm:text-base lg:text-lg text-black">
               Tap, Connect, Impress! With our NFC-enabled business cards, networking
@@ -32,7 +32,7 @@ const HowItWorksPage = () => {
         <div className="flex flex-col lg:flex-row justify-center  lg:justify-between items-center gap-5">
           <div className="flex flex-col gap-5 lg:gap-10">
             <p className=" text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-medium uppercase">
-              Paperless Connectivity
+              Paperless <span className='text-[#D4AF37]'> Connectivity </span>
             </p>
             <p className="text-sm sm:text-base lg:text-lg text-black">
             Revolutionize your networking game with our NFC-powered business cards. Gone are the days
@@ -41,9 +41,9 @@ const HowItWorksPage = () => {
             </p>
           </div>
           <Image
-            src='/assets/hero.png'
-            width={750}
-            height={750}
+            src='/assets/black_logo.png'
+            width={500}
+            height={500}
             alt='Picture of Hero Page'
           />
         </div>
@@ -53,14 +53,14 @@ const HowItWorksPage = () => {
       <div className="px-6 lg:px-16 py-10">
         <div className="flex flex-col lg:flex-row justify-center  lg:justify-between items-center gap-5">
         <Image
-            src='/assets/hero.png'
+            src='/assets/hero_img.png'
             width={750}
             height={750}
             alt='Picture of Hero Page'
           />
           <div className="flex flex-col gap-5 lg:gap-10">
             <p className=" text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-medium uppercase grow">
-              Digital Networking Made Easy
+              Digital Networking  <span className='text-[#D4AF37]'> Made Easy </span>
             </p>
             <p className="text-sm sm:text-base lg:text-lg text-black">
             Experience the future of business networking with our cutting-edge NFC business cards.

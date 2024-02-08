@@ -20,7 +20,7 @@ const FAQ = () => {
           </h1>
         </div>
         
-      <div className="py-10">
+      <div className="py-10 block relative">
         <Accordion open={open === 1}>
             <AccordionHeader onClick={() => handleOpen(1)}>What sets XclusiveTouch digital business cards apart from traditional ones?</AccordionHeader>
             <AccordionBody className='text-lg'>
