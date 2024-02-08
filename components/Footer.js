@@ -8,7 +8,7 @@ import Image from 'next/image'
 function Footer() {
 	return (
 		<footer>
-			<div className="bg-[#071013] h-1/2 w-full flex md:flex-row flex-col justify-around items-start p-20 rounded-t-3xl">
+			<div className="bg-[#071013] h-1/2 w-full flex md:flex-row flex-col sm:content-center justify-around md:items-start items-center p-20 rounded-t-3xl">
 				<div className="p-5 ">
 					<ul>
 						<Image
@@ -17,7 +17,7 @@ function Footer() {
 							height={200}
 							alt='Picture of Hero Page'
          				 />
-						<div className="flex gap-6 pb-5">
+						<div className="flex items-center justify-center gap-8 md:flex md:gap-6 md:pb-5">
 							<Link href='https://www.instagram.com/xclusivetouch23?igsh=MTl6M29ncTdsamxsNA==' target="_blank">
 							<FaInstagram className="text-2xl cursor-pointer text-white hover:text-yellow-600" />
 							</Link>

@@ -39,7 +39,7 @@ const HowItWorks = () => {
             <p className="text-2xl font-semibold text-[#F6F8FF]">2. Create Engagement</p>
             <div className="flex items-center gap-2">
               <p className="text-[#F6F8FF]">
-                Profiles can be customize to your needs, creating engaging and an interactive experience for your users
+                Profiles can be customized to your needs, creating engaging and interactive experiences for users
               </p>
             </div>
          
