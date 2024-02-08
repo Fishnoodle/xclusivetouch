@@ -31,7 +31,7 @@ const Hero = () => {
               An All-In-One Digital Business Card to help you seize opportunities and <br  className="lg:flex hidden"/> make better connections
             </p>
 
-            <div className="hidden lg:inline-flex gap-8 items-center">
+            <div className=" lg:inline-flex gap-8 items-center">
               <button onClick={handleOpen} className="w-48 h-14 bg-[#D4AF37] text-white uppercase text-sm font-semibold rounded-md hover:bg-[#D4AF37] hover:text-black duration-300">
                 contact us
                 </button>
