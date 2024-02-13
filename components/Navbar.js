@@ -118,7 +118,7 @@ const Navbar = () => {
                 src='/assets/logo.png'
                 width={150}
                 height={150}
-                alt='Picture of Hero Page'
+                alt='Picture of XclusiveTouch Logo - in gold'
               />
             </Link>
             <div onClick={handleNav} className="text-3xl p-1 pb-3 cursor-pointer">

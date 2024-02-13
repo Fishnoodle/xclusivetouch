@@ -41,7 +41,7 @@ const Hero = () => {
             src='/assets/hero_img.png'
             width={750}
             height={750}
-            alt='Picture of Hero Page'
+            alt='Picture of XclusiveTouch business cards floating'
           />
         </div>
 

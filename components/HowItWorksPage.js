@@ -12,7 +12,7 @@ const HowItWorksPage = () => {
             src='/assets/SingleCard.png'
             width={750}
             height={750}
-            alt='Picture of Hero Page'
+            alt='Picture of XclusiveTouch single business card'
           />
           <div className="flex flex-col gap-5 lg:gap-10">
             <p className=" text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-medium uppercase">
@@ -44,7 +44,7 @@ const HowItWorksPage = () => {
             src='/assets/black_logo.png'
             width={500}
             height={500}
-            alt='Picture of Hero Page'
+            alt='Picture of XclusiveTouch Logo - in black' 
           />
         </div>
       </div>
@@ -56,7 +56,7 @@ const HowItWorksPage = () => {
             src='/assets/hero_img.png'
             width={750}
             height={750}
-            alt='Picture of Hero Page'
+            alt='Picture of XclusiveTouch business cards floating'
           />
           <div className="flex flex-col gap-5 lg:gap-10">
             <p className=" text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-medium uppercase grow">

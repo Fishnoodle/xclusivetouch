@@ -17,7 +17,7 @@ const HowItWorks = () => {
             src='/assets/HowItWorks1.png'
             width={400}
             height={400}
-            alt='Picture of HowItWorks'
+            alt='Picture of how XclusiveTouch works - Step 1'
             className='rounded-3xl h-[400px]'
             />
             <p className="text-2xl font-semibold text-[#F6F8FF]">1. Tap or Scan Card</p>
@@ -33,7 +33,7 @@ const HowItWorks = () => {
             src='/assets/HowItWorks2.png'
             width={400}
             height={400}
-            alt='Picture of HowItWorks'
+            alt='Picture of how XclusiveTouch works - Step 2'
             className='rounded-3xl h-[400px]'
             />
             <p className="text-2xl font-semibold text-[#F6F8FF]">2. Create Engagement</p>
@@ -49,7 +49,7 @@ const HowItWorks = () => {
             src='/assets/HowItWorks3.png'
             width={400}
             height={400}
-            alt='Picture of HowItWorks'
+            alt='Picture of how XclusiveTouch works - Step 3'
             className='rounded-3xl h-[400px]'
             />
             <p className="text-2xl font-semibold text-[#F6F8FF]">3. Start Networking</p>
