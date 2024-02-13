@@ -15,7 +15,7 @@ function Footer() {
 							src='/assets/logo.png'
 							width={200}
 							height={200}
-							alt='Picture of Hero Page'
+							alt='Picture of XclusiveTouch Logo'
          				 />
 						<div className="flex items-center justify-center gap-8 md:flex md:gap-6 md:pb-5">
 							<Link href='https://www.instagram.com/xclusivetouch23?igsh=MTl6M29ncTdsamxsNA==' target="_blank">
