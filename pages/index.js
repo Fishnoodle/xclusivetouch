@@ -19,6 +19,7 @@ export default function Home() {
     <div>
       <Head>
         <title>Xclusive Touch</title>
+        <link rel="icon" href="/assets/logo.png"></link>
       </Head>
       <Hero/>
       {/*<BentoBox/>*/}
