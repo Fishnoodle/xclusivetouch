@@ -4,66 +4,36 @@ const reviews = [
   [
     {
       content:
-        "XclusiveTouch's NFC business cards are a game-changer! They streamline networking and impress clients effortlessly.",
-      link: "https://twitter.com/rauchg/status/1612233034622984192",
+        "Having a digital business card is very handy and efficient, good way to spread your business without having to pull out a stack of business cards. HIGHLY RECOMMEND!!",
+      link: "https://g.co/kgs/5veFFfv",
       author: {
-        name: "Samantha Hayes",
-        role: "CEO at Vercel",
+        name: "Aryan Naidu",
+        role: "",
         image: "/g.jpg",
       },
     },
-    {
-      content:
-        "As a designer, presentation matters. XclusiveTouch's NFC cards add a touch of innovation to my networking arsenal.",
-      link: "https://twitter.com/cramforce/status/1612496954218672128",
-      author: {
-        name: "Michael Chen",
-        role: "CTO at Vercel",
-        image: "/malte.jpg",
-      },
-    },
   ],
   [
     {
       content:
-        "With XclusiveTouch's NFC business cards, sharing my contact info is as easy as a tap. Clients love the convenience!",
-      link: "https://twitter.com/phar_whaz/status/1612498030627852309",
+        "I bought a couple of these NFC card for my business in the shop and one on me.  I can honestly say this was the best investment i have made.  The best thing about these type of business cards are that you will never run out, and updating is simple as a few clicks.  I would honestly recommend these cards to anyone that is tired of replacing business cards.  Its truly a one time investment😊",
+      link: "https://g.co/kgs/z9e6rUz",
       author: {
-        name: "Emily Johnson",
-        role: "Software Engineer",
+        name: "Roneal Lingam",
+        role: "",
         image: "/fawaz.jpg",
       },
     },
-    {
-      content:
-        "Impressive technology! XclusiveTouch's NFC cards elevate professionalism and make a lasting impression on potential partners.",
-      link: "https://twitter.com/sergvind/status/1612610058369515521",
-      author: {
-        name: "David Thompson",
-        role: "CPO at Treeum",
-        image: "/sergei.jpg",
-      },
-    },
   ],
   [
     {
       content:
-        "I've seen firsthand how XclusiveTouch's NFC cards enhance networking at our events. Attendees love the futuristic touch!",
-      link: "https://twitter.com/Himanil_Gole/status/1612510385504157697",
+        "Great service ! Highly recommend it. Owner is super friendly and helpful.",
+      link: "https://g.co/kgs/Sj9SWqS",
       author: {
-        name: "Rachet Patel",
-        role: "Designer & Founder at CBREX",
+        name: "Shirley Brunetta",
+        role: "",
         image: "/himanil.jpg",
-      },
-    },
-    {
-      content:
-        "In the fast-paced world of startups, every second counts. XclusiveTouch's NFC business cards save time and leave a memorable mark on investors.",
-      link: "https://twitter.com/rod_ellison/status/1612513333302775809",
-      author: {
-        name: "Alex Rodriguez",
-        role: "Software Engineer",
-        image: "/rod.jpg",
       },
     },
   ],
@@ -97,7 +67,7 @@ export function Reviews() {
                     key={testimonialIndex}
                     className="hover:scale-105 transition duration-300 ease-in-out"
                   >
-                    {/* <a href={testimonial.link} target="_blank" rel="noreferrer"> */}
+                    <a href={testimonial.link} target="_blank" rel="noreferrer">
                       <figure className="relative rounded-2xl bg-white p-6 shadow-xl shadow-slate-900/10">
                         <blockquote className="relative">
                           <p className="text-lg tracking-tight text-slate-900">
@@ -124,7 +94,7 @@ export function Reviews() {
                           </div>
                         </figcaption>
                       </figure>
-                    {/* </a> */}
+                    </a>
                   </li>
                 ))}
               </ul>
