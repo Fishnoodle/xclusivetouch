@@ -7,7 +7,7 @@ import Image from 'next/image'
 
 function Footer() {
 	return (
-		<footer>
+		<footer className="">
 			<div className="bg-[#071013] h-1/2 w-full flex md:flex-row flex-col sm:content-center justify-around md:items-start items-center p-20 rounded-t-3xl">
 				<div className="p-5 ">
 					<ul>
@@ -37,10 +37,13 @@ function Footer() {
 							<Link href='howitworks'>How It Works</Link>
 						</li>
 						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
-							Login
+							<Link href='login'>Login</Link>
 						</li>
 						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
-							Sign Up
+							<Link href='register'>Sign Up</Link>
+						</li>
+						<li className="text-gray-200 text-md pb-2 font-semibold hover:text-[#D4AF37] cursor-pointer">
+							<Link href='shop'>Shop</Link>
 						</li>
 
 					</ul>
