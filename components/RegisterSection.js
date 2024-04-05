@@ -1,6 +1,7 @@
 import {React, useState } from 'react';
 import { IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Link from 'next/link'
 
 
 export default function RegisterSection() {
@@ -122,9 +123,9 @@ export default function RegisterSection() {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already a member?{' '}
-            <a href="/login"className="font-semibold leading-6 text-[#D4AF37]">
+            <Link href='/login' className="font-semibold leading-6 text-[#D4AF37]">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
       </div>
