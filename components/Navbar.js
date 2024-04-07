@@ -24,7 +24,7 @@ const Navbar = () => {
 
     
   return (
-    <div className="w-full h-20 lg:h-28 border-b-[1px] border-gray-500 text-white bg-[#071013]">
+    <div className="w-full h-20 lg:h-28 border-b-[1px] border-gray-500 text-white bg-[#071013] rounded-b-3xl">
       <div className="max-w-screen-2xl h-full mx-auto px-4 flex items-center justify-between">
         <h1 className="text-2xl uppercase font-bold">
           <Link href='/'>

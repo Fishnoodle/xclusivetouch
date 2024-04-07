@@ -104,7 +104,7 @@ export default function RegisterSection() {
                   edge="end"
                   style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)' }}
               >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
               </div>
               </div>

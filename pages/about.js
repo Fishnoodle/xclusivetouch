@@ -22,7 +22,6 @@ export default function About() {
 
             <AboutSection/>
             <FAQ/>
-            <Footer/>
         </div>
     )
 }

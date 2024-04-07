@@ -30,7 +30,6 @@ export default function Home() {
       <HowItWorks/>
       <Reviews/>
       <FAQ/>
-      <Footer/>
     </div>
   );
 }

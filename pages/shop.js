@@ -11,7 +11,6 @@ export default function Shop() {
   return (
     <div>
         <ShopSection/>
-        <Footer/>
     </div>
   );
 }

@@ -11,7 +11,6 @@ export default function Login() {
   return (
     <div>
         <LoginSection/>
-        <Footer/>
     </div>
   );
 }

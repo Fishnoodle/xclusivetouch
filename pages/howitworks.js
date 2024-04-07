@@ -22,7 +22,6 @@ export default function HowItWorks() {
             <HowItWorksPage/>
 
             <FAQ/>
-            <Footer/>
         </div>
     )
 }

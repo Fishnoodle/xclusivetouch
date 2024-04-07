@@ -11,7 +11,6 @@ export default function Register() {
   return (
     <div>
         <RegisterSection/>
-        <Footer/>
     </div>
   );
 }
