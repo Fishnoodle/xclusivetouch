@@ -57,7 +57,7 @@ const Navbar = () => {
           </Link>
           <Link href='/login'>
             <button className="w-36 h-10 bg-white text-black uppercase text-sm font-semibold rounded-md hover:bg-[#D4AF37] hover:text-white duration-300">
-                login & register
+                login
             </button>
           </Link>
         </div>

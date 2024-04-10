@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Profile() {
   return (
     <div>
-
+      <Body />
     </div>
   );
 }

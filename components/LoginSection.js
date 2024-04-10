@@ -16,20 +16,24 @@ export default function LoginSection() {
 
     console.log(email, password)
 
-    alert('Currently, the login feature is not available. Please try again later.') 
+    const response = await fetch('http://localhost:8001/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    })
 
-    // const response = await fetch('https://localhost:3000/api/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     email: email,
-    //     password: password
-    //   })
-    // })
+    const data = await response.json()
 
-    // const data = await response.json()
+    if (!data.error) {
+      alert('Login successful!')
+    } else {
+      alert(data.error)
+    }
 
   }
 
