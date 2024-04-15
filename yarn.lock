@@ -625,11 +625,6 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tabler/icons@^3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.2.0.tgz#4adcde021943d50f2c228dab6145fd9c9b639f85"
-  integrity sha512-h8GQ2rtxgiSjltrVz4vcopAxTPSpUSUi5nBfJ09H3Bk4fJk6wZ/dVUjzhv/BHfDwGTkAxZBiYe/Q/T95cPeg5Q==
-
 "@tanstack/react-virtual@^3.0.0-beta.60":
   version "3.2.1"
   resolved "https://registry.npmjs.org/@tanstack/react-virtual/-/react-virtual-3.2.1.tgz"

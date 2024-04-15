@@ -2,9 +2,6 @@ import { Button } from "@material-tailwind/react"
 import Image from "next/image"
 import { useState, React } from "react"
 
-//Tabler Icons
-import { IconBrandGithub, IconBrandLinkedin } from '@tabler/icons'
-
 const Header = () => {
     // Use States
     const [headerColour, setHeaderColour] = useState("bg-red-500")
@@ -78,12 +75,10 @@ const Header = () => {
                 <div className="flex space-x-4 overflow-x-auto">
                     <div className="w-16 h-16 bg-blue-500 rounded flex-none">
                         <button>
-                            <IconBrandGithub size={32} />
                         </button>
                     </div>
                     <div className="w-16 h-16 bg-blue-500 rounded flex-none">
                         <button>
-                            <IconBrandLinkedin size={32} />
                         </button>
                     </div>
                     <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
