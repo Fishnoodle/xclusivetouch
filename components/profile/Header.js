@@ -2,7 +2,7 @@ import { Button } from "@material-tailwind/react"
 import Image from "next/image"
 import { useState, React } from "react"
 
-const Header = () => {
+const Header = (id) => {
     // Use States
     const [headerColour, setHeaderColour] = useState("bg-red-500")
     const [firstName, setFirstName] = useState("First")

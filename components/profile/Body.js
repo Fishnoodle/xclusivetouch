@@ -4,7 +4,7 @@ import Header from "@/components/profile/Header";
 const Body = () => {
     return (
         <div>
-        <Header />
+        <Header id={id} />
         </div>
     )
 }
