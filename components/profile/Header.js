@@ -1,9 +1,11 @@
 import { Button } from "@material-tailwind/react"
 import Image from "next/image"
-import { useState, React } from "react"
+import { useState, React, useEffect } from "react"
+import jwt from "jsonwebtoken"
 
 const Header = (id) => {
     // Use States
+    const [loading, setLoading] = useState(false)
     const [headerColour, setHeaderColour] = useState("bg-red-500")
     const [firstName, setFirstName] = useState("First")
     const [lastName, setLastName] = useState("Last")
@@ -15,6 +17,45 @@ const Header = (id) => {
     const [company, setCompany] = useState("Tech Company")
 
     const [about, setAbout] = useState("I'm passionate about connecting tech and marketing for success. Let's exchange contacts and collaborate on innovative and tech-driven marketing solutions to fuel your growth!")
+
+    useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (token) {
+            const user = jwt.decode(token)
+            fetchUser()
+            if (!user) {
+                localStorage.removeItem("token")
+                history.replace("/login")
+            }
+        }
+    }, [])
+
+    async function fetchUser() {
+        setLoading(true)
+        try {
+            const req = await fetch(`http://146.190.246.199:8001/api/profile/${id}`)
+
+            const data = await req.json()
+            if (data.status === 'ok'){
+                const profile = data.data.profile[0]
+
+                setFirstName(profile.firstName)
+                setLastName(profile.lastName)
+                setPhoneNumber(profile.phoneNumber)
+                setEmail(profile.email)
+                setPosition(profile.position)
+                setCompany(profile.company)
+                setAbout(profile.about)
+                //setHeaderColour(profile.headerColour)
+
+                console.log(profile)
+            } else {
+                alert(data.error)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const createVCard = () => {
         const vCardData = [
@@ -58,10 +99,10 @@ const Header = (id) => {
             
             <div className="w-[90%] top-[50%] flex justify-center items-center space-x-10 mx-auto -translate-y-20">
                 <Button fullWidth variant="outlined" size="lg" className="text-sm" onClick={createVCard}>
-                    <span className="text-[11px]">Save Contact</span>
+                    <span className="text-[60%]">Save Contact</span>
                 </Button>
                 <Button fullWidth variant="gradient" size="lg" className="text-sm" onClick={() => window.location.href = `sms:${phoneNumber}`}>
-                    <span className="text-[11px]">Message Contact</span>
+                    <span className="text-[60%]">Message Contact</span>
                 </Button>
             </div>
 

@@ -28,9 +28,11 @@ export default function LoginSection() {
     })
 
     const data = await response.json()
+    console.log(data.user)
 
     if (!data.error) {
       alert('Login successful!')
+      window.location.href = `/profile/${data.user._id}`
     } else {
       alert(data.error)
     }

@@ -1,10 +1,12 @@
 import { React, useState } from 'react'
 import Header from "@/components/profile/Header";
 
-const Body = () => {
+const Body = (id) => {
+
+
     return (
         <div>
-        <Header id={id} />
+        <Header id={id}/>
         </div>
     )
 }
