@@ -18,7 +18,30 @@ export default function RegisterSection() {
 
     console.log(email, password, confirmPassword)
 
-    alert('Currently, the registration feature is not available. Please try again later.')
+    if (password !== confirmPassword) {
+      alert('Passwords do not match!')
+      return
+    }
+
+    const response = await fetch('http://146.190.246.199:8001/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    })
+
+    const data = await response.json()
+
+    if (!data.error) {
+      alert('Registration successful!')
+      window.location.href = `/login`
+    } else {
+      alert(data.error)
+    }
   }
   
   return (

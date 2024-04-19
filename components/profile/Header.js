@@ -3,7 +3,7 @@ import Image from "next/image"
 import { useState, React, useEffect } from "react"
 import jwt from "jsonwebtoken"
 
-const Header = (id) => {
+const Header = (profile) => {
     // Use States
     const [loading, setLoading] = useState(false)
     const [headerColour, setHeaderColour] = useState("bg-red-500")
@@ -19,43 +19,16 @@ const Header = (id) => {
     const [about, setAbout] = useState("I'm passionate about connecting tech and marketing for success. Let's exchange contacts and collaborate on innovative and tech-driven marketing solutions to fuel your growth!")
 
     useEffect(() => {
-        const token = localStorage.getItem("token")
-        if (token) {
-            const user = jwt.decode(token)
-            fetchUser()
-            if (!user) {
-                localStorage.removeItem("token")
-                history.replace("/login")
-            }
-        }
-    }, [])
+        const info = profile.id.profile
 
-    async function fetchUser() {
-        setLoading(true)
-        try {
-            const req = await fetch(`http://146.190.246.199:8001/api/profile/${id}`)
-
-            const data = await req.json()
-            if (data.status === 'ok'){
-                const profile = data.data.profile[0]
-
-                setFirstName(profile.firstName)
-                setLastName(profile.lastName)
-                setPhoneNumber(profile.phoneNumber)
-                setEmail(profile.email)
-                setPosition(profile.position)
-                setCompany(profile.company)
-                setAbout(profile.about)
-                //setHeaderColour(profile.headerColour)
-
-                console.log(profile)
-            } else {
-                alert(data.error)
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }
+        setFirstName(info.firstName);
+        setLastName(info.lastName);
+        setPhoneNumber(info.phoneNumber);
+        setEmail(info.email);
+        setPosition(info.position);
+        setCompany(info.company);
+        setAbout(info.about);
+    }, [profile]);
 
     const createVCard = () => {
         const vCardData = [
@@ -91,8 +64,8 @@ const Header = (id) => {
                 </div>
 
                 <div className="w-3/5 bg-black flex flex-col items-start justify-center pl-3">
-                    <span className="block text-white text-[40px] font-bold"> {firstName}</span>
-                    <span className="block text-white text-[40px] font-bold"> {lastName}</span>
+                    <span className="block text-white text-[20px]"> {firstName}</span>
+                    <span className="block text-white text-[20px]"> {lastName}</span>
                 </div>
 
             </div>
