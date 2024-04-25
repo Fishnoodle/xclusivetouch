@@ -16,7 +16,11 @@ module.exports = withMT({
         hoverColor: '#ffaa17',
         darkRed: '#ea0638',
       },
+      fontFamily: {
+        'sans': ['Poppins', 'sans-serif'],
+      }
     },
   },
+  variants: {},
   plugins: [],
 });
