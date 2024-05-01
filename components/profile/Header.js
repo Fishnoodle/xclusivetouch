@@ -22,8 +22,6 @@ const Header = (profile) => {
     useEffect(() => {
         const info = profile.id.profile
 
-        console.log(info.colours[0].profilePhoto.url)
-
         setFirstName(info.firstName);
         setLastName(info.lastName);
         setPhoneNumber(info.phoneNumber);

@@ -2,6 +2,7 @@ import {React, useState } from 'react';
 import { IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Link from 'next/link';
+import {toast, Toaster} from 'react-hot-toast';
 
 
 export default function LoginSection() {
@@ -16,6 +17,8 @@ export default function LoginSection() {
 
     console.log(email, password)
 
+    const notify = toast.loading('Logging in...')
+
     const response = await fetch('https://api.xclusivetouch.ca/api/login', {
       method: 'POST',
       headers: {
@@ -28,21 +31,22 @@ export default function LoginSection() {
     })
 
     const data = await response.json()
-    console.log(data.user)
+    console.log(data.error)
 
     if (!data.error) {
-      alert('Login successful!')
+      toast.success('Login successful!', { id: notify })
       window.location.href = `/profile/${data.user._id}`
     } else {
-      alert(data.error)
+      console.log('ERRO')
+      toast.error('Login failed: ' + data.error, { id: notify })
     }
-
   }
 
 
 
   return (
     <>
+      <Toaster />
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
