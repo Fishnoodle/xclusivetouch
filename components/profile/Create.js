@@ -17,7 +17,7 @@ const Create = () => {
     async function handleSubmit(e) {
         event.preventDefault()
 
-        const response = await fetch('http://146.190.246.199:8001/api/profile', {
+        const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

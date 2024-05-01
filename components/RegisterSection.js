@@ -23,7 +23,7 @@ export default function RegisterSection() {
       return
     }
 
-    const response = await fetch('http://146.190.246.199:8001/api/register', {
+    const response = await fetch('https://api.xclusivetouch.ca/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

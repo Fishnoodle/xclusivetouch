@@ -35,7 +35,7 @@ export default function Profile() {
 
   async function fetchUser() {
     try {
-      const req = await fetch(`http://146.190.246.199:8001/api/profile/${id}`)
+      const req = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`)
 
       console.log(id)
 
