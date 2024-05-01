@@ -28,6 +28,7 @@ export default function RegisterSection() {
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include',
       body: JSON.stringify({
         email: email,
         password: password

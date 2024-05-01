@@ -101,8 +101,8 @@ const Navbar = () => {
                 </button>
               </li>
               <li onClick={()=> setNav(false)} className="py-8">
-                <button href='/login' className="w-48 h-14 bg-[#D4AF37] text-white uppercase text-sm font-semibold rounded-md hover:bg-[#D4AF37] hover:text-black duration-300">
-                  login & register
+                <button href='login' className="w-48 h-14 bg-[#D4AF37] text-white uppercase text-sm font-semibold rounded-md hover:bg-[#D4AF37] hover:text-black duration-300">
+                  <Link href='login'> Login & Register </Link>
                 </button>
               </li>
             </ul>

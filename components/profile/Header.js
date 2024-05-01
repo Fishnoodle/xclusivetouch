@@ -2,6 +2,7 @@ import { Button } from "@material-tailwind/react"
 import Image from "next/image"
 import { useState, React, useEffect } from "react"
 import jwt from "jsonwebtoken"
+import { FaFacebook } from "react-icons/fa"
 
 const Header = (profile) => {
     // Use States
@@ -20,6 +21,8 @@ const Header = (profile) => {
 
     useEffect(() => {
         const info = profile.id.profile
+
+        console.log(info.colours[0].profilePhoto.url)
 
         setFirstName(info.firstName);
         setLastName(info.lastName);
@@ -51,9 +54,9 @@ const Header = (profile) => {
 
     return (
         <div className="overflow-hidden relative">
-            <div className={`${headerColour} w-screen h-[200px] rounded-b-lg`}/>
+            <div className={`${headerColour} w-screen h-[200px]`}/>
 
-            <div className="w-[90%] h-[200px] bg-blue-gray-100 -translate-y-1/2 rounded-lg mx-auto flex">
+            <div className="w-[90%] h-[200px] bg-blue-gray-100 -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
                 <div className="w-2/5 relative">
                     <Image
                         src="https://randomuser.me/api/portraits/men/41.jpg"
@@ -64,12 +67,18 @@ const Header = (profile) => {
                 </div>
 
                 <div className="w-3/5 bg-black flex flex-col items-start justify-center pl-3">
-                    <span className="block text-white text-[20px]"> {firstName}</span>
-                    <span className="block text-white text-[20px]"> {lastName}</span>
+                    <div className="mb-2 pl-2">
+                        <span className="block text-white text-[22px] font-semibold"> {firstName}</span>
+                        <span className="block text-white text-[22px] font-semibold"> {lastName}</span>
+                    </div>
+                    <div className="pl-2">
+                        <span className="block text-white text-[14px] font-light"> {position}</span>
+                        <span className="block text-white text-[14px] font-light"> {company}</span>
+                    </div>
                 </div>
 
             </div>
-            
+
             <div className="w-[90%] top-[50%] flex justify-center items-center space-x-10 mx-auto -translate-y-20">
                 <Button fullWidth variant="outlined" size="lg" className="text-sm" onClick={createVCard}>
                     <span className="text-[60%]">Save Contact</span>
@@ -79,16 +88,17 @@ const Header = (profile) => {
                 </Button>
             </div>
 
-            <div className="mx-5 -translate-y-1/3">
+            <div className="mx-5 -translate-y-1/2">
                 <p className="text-2xl font-bold mb-3"> About </p>
                 <p>{about}</p>
             </div>
 
-            <div className="mx-5 -translate-y-1/4">
+            <div className="mx-5 -translate-y-1/5">
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
                 <div className="flex space-x-4 overflow-x-auto">
-                    <div className="w-16 h-16 bg-blue-500 rounded flex-none">
-                        <button>
+                    <div className="w-16 h-16 bg-gray-500 rounded flex-none items-center justify-center">
+                        <button className="w-full h-full flex items-center justify-center">
+                            <FaFacebook className="text-white text-2xl w-full h-full" />
                         </button>
                     </div>
                     <div className="w-16 h-16 bg-blue-500 rounded flex-none">
