@@ -21,6 +21,7 @@ export default function LoginSection() {
       headers: {
         'Content-Type': 'application/json'
       },
+      credentials: 'include', // Include credentials
       body: JSON.stringify({
         email: email,
         password: password
