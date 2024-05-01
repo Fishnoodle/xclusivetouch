@@ -19,8 +19,10 @@ export default function Profile({ id }) {
       console.log(id);
 
       const token = localStorage.getItem("token")
+      console.log('Token:', token);
       if (token) {
         const user = jwt.decode(token)
+        console.log('User:', user);
         fetchUser()
         if (!user) {
           localStorage.removeItem("token")
