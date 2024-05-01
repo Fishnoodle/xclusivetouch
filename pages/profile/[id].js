@@ -18,7 +18,7 @@ export default function Profile({ id }) {
     if (id) {
       console.log(id);
 
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("token") || req.cookies.token;
       console.log('Token:', token);
       if (token) {
         const user = jwt.decode(token)
