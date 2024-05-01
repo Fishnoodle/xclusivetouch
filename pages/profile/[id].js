@@ -9,10 +9,7 @@ import Create from "@/components/profile/Create";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Profile() {
-  const router = useRouter();
-  const { id } = router.query;
-
+export default function Profile({ id }) {
   // UseStates
   const [profile, setProfile] = useState(false);
 
@@ -38,9 +35,10 @@ export default function Profile() {
       const req = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`)
 
       console.log(id)
+      
 
       const data = await req.json()
-      console.log(data.data.profile[0], 'data')
+      console.log(data)
       if (data.data !== null){
         setProfile(data.data.profile[0])
       }
