@@ -11,8 +11,6 @@ export default function LoginSection() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false);
 
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
   // MERN Stack - Login API
   async function login(event) {
     event.preventDefault()
@@ -39,10 +37,8 @@ export default function LoginSection() {
       toast.success('Login successful!', { id: notify })
       window.location.href = `/profile/${data.user._id}`
     } else {
-      console.log('ERROR')
-      setTimeout(() => {
-        toast.error('Login failed: ' + data.error, { id: notify })
-      }, 5000) // Wait 5 seconds before displaying the error message
+      console.log('ERRO')
+      toast.error('Login failed: ' + data.error, { id: notify })
     }
   }
 
@@ -115,25 +111,17 @@ export default function LoginSection() {
             </div>
 
             <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-[#D4AF37] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              onClick={(event) => {
-                if (!isLoggingIn) {
-                  setIsLoggingIn(true);
-                  login(event);
-                }
-              }}
-              onTouchStart={(event) => {
-                event.preventDefault();
-                if (!isLoggingIn) {
-                  setIsLoggingIn(true);
-                  login(event);
-                }
-              }}
-            >
-              Sign in
-            </button>
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-[#D4AF37] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                onClick={login}
+                onTouchStart={(event) => {
+                  event.preventDefault()
+                  login(event)
+                }}
+              >
+                Sign in
+              </button>
             </div>
           </form>
 

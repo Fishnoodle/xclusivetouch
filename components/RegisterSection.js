@@ -2,6 +2,7 @@ import {React, useState } from 'react';
 import { IconButton } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Link from 'next/link'
+import {toast, Toaster} from 'react-hot-toast'
 
 
 export default function RegisterSection() {
@@ -19,7 +20,7 @@ export default function RegisterSection() {
     console.log(email, password, confirmPassword)
 
     if (password !== confirmPassword) {
-      alert('Passwords do not match!')
+      toast.error('Passwords do not match!')
       return
     }
 
@@ -28,7 +29,6 @@ export default function RegisterSection() {
       headers: {
         'Content-Type': 'application/json'
       },
-      credentials: 'include',
       body: JSON.stringify({
         email: email,
         password: password
@@ -36,17 +36,20 @@ export default function RegisterSection() {
     })
 
     const data = await response.json()
+    console.log(data.error)
 
     if (!data.error) {
-      alert('Registration successful!')
+      toast.success('Registration successful!')
       window.location.href = `/login`
     } else {
-      alert(data.error)
+      console.log('ERRO')
+      toast.error('Registration Failed' + data.error)
     }
   }
   
   return (
     <>
+      <Toaster/>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -141,6 +144,10 @@ export default function RegisterSection() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-[#D4AF37] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 onClick={register}
+                onTouchStart={(event) => {
+                  event.preventDefault()
+                  register(event)
+                }}
               >
                 Sign Up
               </button>
