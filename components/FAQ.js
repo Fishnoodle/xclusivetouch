@@ -12,15 +12,15 @@ const FAQ = () => {
 
 
     return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 flex flex-col items-center justify-center">
 
-        <div className="mx-auto md:text-center py-10">
-          <h1 className="mx-auto max-w-4xl font-display text-3xl font-bold tracking-normal text-slate-900 sm:text-5xl">
-            Frequently Asked Questions
-          </h1>
-        </div>
-        
-      <div className="py-10 block relative">
+    <div className="mx-auto md:text-center py-10 px-2">
+    <h1 className="mx-auto max-w-4xl font-display text-3xl font-bold tracking-normal text-slate-900 sm:text-5xl">
+        Frequently Asked Questions
+    </h1>
+    </div>
+
+    <div className="py-10 block relative md: px-10">
         <Accordion open={open === 1}>
             <AccordionHeader onClick={() => handleOpen(1)}>What sets XclusiveTouch digital business cards apart from traditional ones?</AccordionHeader>
             <AccordionBody className='text-lg'>
