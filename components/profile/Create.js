@@ -1,5 +1,6 @@
-import { React, useState } from 'react'
-import { Card, Input, Checkbox, Button, Typography, Textarea } from '@material-tailwind/react'
+import React, { useState } from 'react';
+import { Card, Input, Button, Typography, Textarea, TextField } from '@material-tailwind/react';
+import { Select, MenuItem } from '@mui/material';
 
 const Create = () => {
     // useStates
@@ -13,6 +14,18 @@ const Create = () => {
     const [headerColour, setHeaderColour] = useState('')
     const [cardColour, setCardColour] = useState('')
     const [photo, setPhoto] = useState('')
+
+    const [socialMedia, setSocialMedia] = useState({})
+    const [selectedSocialMedia, setSelectedSocialMedia] = useState('')
+    const [link, setLink] = useState('')
+
+    const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Youtube', 'Twitch']
+
+    const handleAdd = () => {
+        setSocialMedia(prev => ({ ...prev, [selectedSocialMedia]: link }))
+        setSelectedSocialMedia('')
+        setLink('')
+    }
 
     async function handleSubmit(e) {
         event.preventDefault()
@@ -207,6 +220,35 @@ const Create = () => {
             className: "before:content-none after:content-none",
             }}
         />
+
+        {/* <Typography variant="h6" color="blue-gray" className="-mb-3">
+            Choose your social media
+        </Typography>
+        <Select
+            value={selectedSocialMedia}
+            onChange={(e) => setSelectedSocialMedia(e.target.value)}
+        >
+            <MenuItem value="">
+                <em>None</em>
+            </MenuItem>
+            {socialMediaOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                    {option}
+                </MenuItem>
+            ))}
+        </Select>
+
+        <Typography variant="h6" color="blue-gray" className="-mb-3">
+            Enter your social meida link
+        </Typography>
+        <TextField
+            type='text'
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            placeholder='Enter your social media lnk'
+        />
+
+        <Button onClick={handleAdd}>Add</Button> */}
 
         </div>
         <Button className="mt-6" fullWidth onClick={handleSubmit}>

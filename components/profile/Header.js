@@ -2,12 +2,13 @@ import { Button } from "@material-tailwind/react"
 import Image from "next/image"
 import { useState, React, useEffect } from "react"
 import jwt from "jsonwebtoken"
-import { FaFacebook } from "react-icons/fa"
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch } from "react-feather"
 
 const Header = (profile) => {
     // Use States
     const [loading, setLoading] = useState(false)
     const [headerColour, setHeaderColour] = useState("bg-red-500")
+    const [cardColour, setCardColour] = useState("bg-blue-100")
     const [firstName, setFirstName] = useState("First")
     const [lastName, setLastName] = useState("Last")
 
@@ -19,8 +20,20 @@ const Header = (profile) => {
 
     const [about, setAbout] = useState("I'm passionate about connecting tech and marketing for success. Let's exchange contacts and collaborate on innovative and tech-driven marketing solutions to fuel your growth!")
 
+    const [socialLinks, setSocialLinks] = useState({})
+
+    const iconMapping = {
+        facebook: <Facebook className="text-gray-600" />,
+        instagram: <Instagram className="text-gray-600" />,
+        twitter: <Twitter className="text-gray-600" />,
+        linkedin: <Linkedin className="text-gray-600" />,
+        // Add more mappings as needed
+      };
+
     useEffect(() => {
         const info = profile.id.profile
+
+        console.log(info)
 
         setFirstName(info.firstName);
         setLastName(info.lastName);
@@ -29,6 +42,23 @@ const Header = (profile) => {
         setPosition(info.position);
         setCompany(info.company);
         setAbout(info.about);
+
+        setHeaderColour(info?.colours[0]?.primaryColour)
+        setCardColour(info?.colours[0]?.cardColour)
+
+        const socials = info?.socialMedia[0] || {}
+
+        console.log(socials)
+
+        let newSocialLinks = {};
+        for (let key in socials) {
+            if (key !== '_id') {
+                newSocialLinks[key] = socials[key];
+            }
+        }
+
+        setSocialLinks(newSocialLinks);
+
     }, [profile]);
 
     const createVCard = () => {
@@ -49,12 +79,13 @@ const Header = (profile) => {
         a.click();
     };
     
+    console.log(headerColour)
 
     return (
         <div className="overflow-hidden relative">
-            <div className={`${headerColour} w-screen h-[200px]`}/>
+            <div style={{ backgroundColor: headerColour, width: '100vw', height: '200px' }}/>
 
-            <div className="w-[90%] h-[200px] bg-blue-gray-100 -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
+            <div className="w-[90%] h-[200px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
                 <div className="w-1/2 h-auto relative">
                     <Image
                         src="/assets/images.png"
@@ -64,7 +95,7 @@ const Header = (profile) => {
                     />
                 </div>
 
-                <div className="w-3/5 bg-black flex flex-col items-start justify-center pl-3">
+                <div style={{ backgroundColor: cardColour }} className="w-3/5 flex flex-col items-start justify-center pl-3">
                     <div className="mb-2 pl-2">
                         <span className="block text-white text-[22px] font-semibold"> {firstName}</span>
                         <span className="block text-white text-[22px] font-semibold"> {lastName}</span>
@@ -91,25 +122,18 @@ const Header = (profile) => {
                 <p>{about}</p>
             </div>
 
-            {/* <div className="mx-5 -translate-y-1/5">
+            <div className="mx-5 -translate-y-1/5">
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
                 <div className="flex space-x-4 overflow-x-auto">
-                    <div className="w-16 h-16 bg-gray-500 rounded flex-none items-center justify-center">
-                        <button className="w-full h-full flex items-center justify-center">
-                            <FaFacebook className="text-white text-2xl w-full h-full" />
-                        </button>
+                    {Object.entries(socialLinks).map(([name, link]) => (
+                    <div key={name} className="w-16 h-16 bg-gray-200 rounded flex-none items-center justify-center">
+                        <a href={link} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
+                        {iconMapping[name.toLowerCase()] || name}
+                        </a>
                     </div>
-                    <div className="w-16 h-16 bg-blue-500 rounded flex-none">
-                        <button>
-                        </button>
-                    </div>
-                    <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
-                    <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
-                    <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
-                    <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
+                    ))}
                 </div>
-
-            </div> */}
+            </div>
 
         </div>
     )
