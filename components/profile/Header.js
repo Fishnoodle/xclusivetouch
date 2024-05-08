@@ -55,11 +55,11 @@ const Header = (profile) => {
             <div className={`${headerColour} w-screen h-[200px]`}/>
 
             <div className="w-[90%] h-[200px] bg-blue-gray-100 -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
-                <div className="w-2/5 relative">
+                <div className="w-1/2 h-auto relative">
                     <Image
-                        src="https://randomuser.me/api/portraits/men/41.jpg"
+                        src="/assets/images.png"
                         alt="Profile"
-                        fill="fill"
+                        layout="fill"
                         objectFit="cover"
                     />
                 </div>
@@ -91,7 +91,7 @@ const Header = (profile) => {
                 <p>{about}</p>
             </div>
 
-            <div className="mx-5 -translate-y-1/5">
+            {/* <div className="mx-5 -translate-y-1/5">
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
                 <div className="flex space-x-4 overflow-x-auto">
                     <div className="w-16 h-16 bg-gray-500 rounded flex-none items-center justify-center">
@@ -107,9 +107,9 @@ const Header = (profile) => {
                     <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
                     <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
                     <div className="w-16 h-16 bg-blue-500 rounded flex-none"></div>
-                    {/* Add more squares as needed */}
                 </div>
-            </div>
+
+            </div> */}
 
         </div>
     )
