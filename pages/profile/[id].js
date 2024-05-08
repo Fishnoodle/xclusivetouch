@@ -13,12 +13,11 @@ export default function Profile({ id }) {
   // UseStates
   const [profile, setProfile] = useState(false);
 
-  // Checks if user is logged in, otherwise redirects to login page
   useEffect(() => {
     if (id) {
       console.log(id);
 
-      const token = localStorage.getItem("token") || req.cookies.token;
+      const token = localStorage.getItem("token");
       console.log('Token:', token);
       fetchUser();
     }
