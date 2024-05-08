@@ -20,15 +20,7 @@ export default function Profile({ id }) {
 
       const token = localStorage.getItem("token") || req.cookies.token;
       console.log('Token:', token);
-      if (token) {
-        const user = jwt.decode(token)
-        console.log('User:', user);
-        fetchUser()
-        if (!user) {
-          localStorage.removeItem("token")
-          history.replace("/login")
-        }
-      }
+      fetchUser();
     }
   }, [id])
 
