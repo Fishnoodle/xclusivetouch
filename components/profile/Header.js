@@ -7,19 +7,16 @@ import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch } from "react-f
 const Header = (profile) => {
     // Use States
     const [loading, setLoading] = useState(false)
-    const [headerColour, setHeaderColour] = useState("bg-red-500")
-    const [cardColour, setCardColour] = useState("bg-blue-100")
-    const [firstName, setFirstName] = useState("First")
-    const [lastName, setLastName] = useState("Last")
-
-    const [phoneNumber, setPhoneNumber] = useState("1234567890")
-    const [email, setEmail] = useState("email@email.com")
-
-    const [position, setPosition] = useState("Tech Marketer")
-    const [company, setCompany] = useState("Tech Company")
-
-    const [about, setAbout] = useState("I'm passionate about connecting tech and marketing for success. Let's exchange contacts and collaborate on innovative and tech-driven marketing solutions to fuel your growth!")
-
+    
+    const [headerColour, setHeaderColour] = useState("")
+    const [cardColour, setCardColour] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [phoneNumber, setPhoneNumber] = useState("")
+    const [email, setEmail] = useState("")
+    const [position, setPosition] = useState("")
+    const [company, setCompany] = useState("")
+    const [about, setAbout] = useState("")
     const [socialLinks, setSocialLinks] = useState({})
 
     const iconMapping = {
@@ -88,7 +85,6 @@ const Header = (profile) => {
             <div className="w-[90%] h-[200px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
                 <div className="w-1/2 h-auto relative">
                     <Image
-                        src="/assets/images.png"
                         alt="Profile"
                         layout="fill"
                         objectFit="cover"

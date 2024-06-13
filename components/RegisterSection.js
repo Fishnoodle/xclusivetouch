@@ -39,7 +39,7 @@ export default function RegisterSection() {
     console.log(data.error)
 
     if (!data.error) {
-      toast.success('Registration successful!')
+      toast.success('Registration successful. Please check your email for a confirmation link.')
       window.location.href = `/login`
     } else {
       console.log('ERRO')
