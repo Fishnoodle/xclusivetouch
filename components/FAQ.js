@@ -14,10 +14,10 @@ const FAQ = () => {
     return (
     <div className="container mx-auto py-10 flex flex-col items-center justify-center">
 
-    <div className="mx-auto md:text-center py-10 px-2">
-    <h1 className="mx-auto max-w-4xl font-display text-3xl font-bold tracking-normal text-slate-900 sm:text-5xl">
-        Frequently Asked Questions
-    </h1>
+    <div className="mx-auto text-center md:text-center py-10 px-2">
+        <h1 className="max-w-4xl font-display text-3xl font-bold tracking-normal text-slate-900 sm:text-5xl">
+            Frequently Asked Questions
+        </h1>
     </div>
 
     <div className="py-10 block relative md: px-10">
