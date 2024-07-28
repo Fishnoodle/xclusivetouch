@@ -40,10 +40,10 @@ const Header = (profile) => {
         setCompany(info.company);
         setAbout(info.about);
 
-        setHeaderColour(info?.colours[0]?.primaryColour)
-        setCardColour(info?.colours[0]?.cardColour)
+        setHeaderColour(info?.colours?.[0]?.primaryColour)
+        setCardColour(info?.colours?.[0]?.cardColour)
 
-        const socials = info?.socialMedia[0] || {}
+        const socials = info?.socialMedia?.[0] || {}
 
         console.log(socials)
 
