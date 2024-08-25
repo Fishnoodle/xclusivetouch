@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Card, Input, Button, Typography, Textarea, TextField } from '@material-tailwind/react';
-import { Select, MenuItem } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Card, Input, Button, Typography, Textarea } from '@material-tailwind/react';
+import { Select, MenuItem, TextField } from '@mui/material';
 
-const Create = () => {
+const Create = ({ id = null, profile = null }) => {
     // useStates
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -11,24 +11,51 @@ const Create = () => {
     const [occupation, setOccupation] = useState('')
     const [company, setCompany] = useState('')
     const [about, setAbout] = useState('')
-    const [headerColour, setHeaderColour] = useState('')
-    const [cardColour, setCardColour] = useState('')
-    const [photo, setPhoto] = useState('')
-
-    const [socialMedia, setSocialMedia] = useState({})
-    const [selectedSocialMedia, setSelectedSocialMedia] = useState('')
+    const [headerColour, setHeaderColour] = useState('#000000')
+    const [cardColour, setCardColour] = useState('#000000')
+    const [photo, setPhoto] = useState(null)
+    const [socialMedia, setSocialMedia] = useState([{ platform: '', link: '' }])
     const [link, setLink] = useState('')
 
     const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Youtube', 'Twitch']
 
     const handleAdd = () => {
-        setSocialMedia(prev => ({ ...prev, [selectedSocialMedia]: link }))
-        setSelectedSocialMedia('')
-        setLink('')
+        setSocialMedia(prev => [...prev, { platform: '', link: '' }])
     }
 
     async function handleSubmit(e) {
         event.preventDefault()
+
+        if (id) {
+            const response = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    phoneNumber: phone,
+                    email: email,
+                    position: occupation,
+                    company: company,
+                    about: about,
+                    primaryColour: headerColour,
+                    cardColour: cardColour,
+                    profilePhoto: photo,
+                    socialMedia: socialMedia
+                })
+            })
+
+            const data = await response.json()
+
+            if (!data.error) {
+                alert('Profile updated successfully!')
+                window.location.reload();
+            } else {
+                alert(data.error)
+            }
+        } else {
 
         const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
             method: 'POST',
@@ -45,7 +72,8 @@ const Create = () => {
                 about: about,
                 primaryColour: headerColour,
                 cardColour: cardColour,
-                profilePhoto: photo
+                profilePhoto: photo,
+                socialMedia: socialMedia
             })
         })
 
@@ -59,12 +87,40 @@ const Create = () => {
         }
     }
 
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                if (id) {
+                    console.log(id)
+                    if (profile !== null) {
+                        setFirstName(profile.firstName)
+                        setLastName(id.lastName)
+                        setPhone(profile.phoneNumber)
+                        setEmail(profile.email)
+                        setOccupation(profile.position)
+                        setCompany(profile.company)
+                        setAbout(profile.about)
+                        setHeaderColour(profile.colours[0]?.primaryColour)
+                        setCardColour(profile.colours[0]?.cardColour)
+                        setPhoto(profile.colours[0]?.profilePhoto)
+                    } 
+                }
+            } catch (err) {
+                console.log('Error caught:', err);
+            }
+        }
+
+        fetchData()
+    }, [id])
+
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems:'center', minHeight: '5vh'}}>
      <Card color="transparent" shadow={false}>
       <Typography variant="h4" color="blue-gray">
-        Sign Up
+        {id ? 'Edit Profile' : 'Sign Up'}
       </Typography>
       <Typography color="gray" className="mt-1 font-normal">
         Nice to meet you! Enter your details profile.
@@ -207,7 +263,7 @@ const Create = () => {
             }}
         />
 
-        <Typography variant="h6" color="blue-gray" className="-mb-3">
+        {/* <Typography variant="h6" color="blue-gray" className="-mb-3">
             Upload a photo
         </Typography>
         <Input
@@ -219,14 +275,22 @@ const Create = () => {
             labelProps={{
             className: "before:content-none after:content-none",
             }}
-        />
+        /> */}
 
-        {/* <Typography variant="h6" color="blue-gray" className="-mb-3">
+Social Media
+{socialMedia.map((media, index) => (
+    <div key={index}>
+        <Typography variant="h6" color="blue-gray" className="-mb-3">
             Choose your social media
         </Typography>
         <Select
-            value={selectedSocialMedia}
-            onChange={(e) => setSelectedSocialMedia(e.target.value)}
+            fullWidth
+            value={media.platform}
+            onChange={(e) => {
+                const newMedia = [...socialMedia]
+                newMedia[index].platform = e.target.value
+                setSocialMedia(newMedia)
+            }}
         >
             <MenuItem value="">
                 <em>None</em>
@@ -239,20 +303,27 @@ const Create = () => {
         </Select>
 
         <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Enter your social meida link
+            Enter your social media link
         </Typography>
-        <TextField
-            type='text'
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-            placeholder='Enter your social media lnk'
+        <Input
+            size='large'
+            
+            value={media.link}
+            onChange={(e) => {
+                const newMedia = [...socialMedia]
+                newMedia[index].link = e.target.value
+                setSocialMedia(newMedia)
+            }}
+            placeholder='Enter your social media link'
         />
+    </div>
+))}
 
-        <Button onClick={handleAdd}>Add</Button> */}
+        <Button onClick={handleAdd}>Add</Button>
 
         </div>
         <Button className="mt-6" fullWidth onClick={handleSubmit}>
-          create your profile
+            {id ? 'Update Profile' : 'Create Profile'}
         </Button>
       </form>
     </Card>

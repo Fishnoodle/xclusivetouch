@@ -17,9 +17,15 @@ export default function Profile({ id }) {
   // UseStates
   const [profile, setProfile] = useState(false);
   const [username, setUsername] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const handleClick = () => {   
     window.location.href = `/profile/${username}`
+  }
+
+  const handleEditClick = (event) => {
+    event.preventDefault();
+    setEditMode(true);
   }
 
   useEffect(() => {
@@ -56,8 +62,8 @@ export default function Profile({ id }) {
     }
   }
 
-  if (!profile) {
-    <Create />
+  if (!profile || editMode) {
+    return <Create {...(editMode ? { id, profile } : {})} />;
   }
 
   return (
@@ -65,15 +71,17 @@ export default function Profile({ id }) {
       <Toaster />
       <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 py-4">
 
-        <Card className='mt-6 w-96 mb-6'>
-          <CardHeader color='blue-gray' className='relative h-56'>
-            <img
-              src="https://images.unsplash.com/photo-1601933346352-1b4e1e4d4f6b"
-              alt="card-image"
+      <Card className='mt-6 w-96 mb-6'>
+        <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
+            <Image 
+              src='/assets/hero_img.png'
+              width={250}
+              height={250}
+              alt='Picture of XclusiveTouch business cards floating'
             />
           </CardHeader>
           <CardBody>
-            <Typography variant='h5' color="blue-gray" className='mb-2'>
+            <Typography variant='h5' className='mb-2'>
               Public Profile
             </Typography>
             <Typography>
@@ -89,11 +97,13 @@ export default function Profile({ id }) {
           </CardFooter>
         </Card>
 
-        <Card className='mt-6 w-96'>
-          <CardHeader color='blue-gray' className='relative h-56'>
-            <img
-              src="https://images.unsplash.com/photo-1601933346352-1b4e1e4d4f6b"
-              alt="card-image"
+        <Card className='mt-6 w-96 mb-6'>
+          <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
+            <Image 
+              src='/assets/hero_img.png'
+              width={250}
+              height={250}
+              alt='Picture of XclusiveTouch business cards floating'
             />
           </CardHeader>
           <CardBody>
@@ -105,9 +115,9 @@ export default function Profile({ id }) {
             </Typography>
           </CardBody>
           <CardFooter className='pt-0'>
-            <a href={`#`} target='_blank' className='pointer-events-none'>
-              <Button disabled>
-                Edit Profile (IN PROGRESS)
+            <a href="#" target='_blank' onClick={handleEditClick}>
+              <Button>
+                Edit Profile
               </Button>
             </a>
           </CardFooter>
