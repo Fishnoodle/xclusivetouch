@@ -24,6 +24,8 @@ const Header = (profile) => {
         instagram: <Instagram className="text-gray-600" />,
         twitter: <Twitter className="text-gray-600" />,
         linkedin: <Linkedin className="text-gray-600" />,
+        youtube: <Youtube className="text-gray-600" />,
+        twitch: <Twitch className="text-gray-600" />,
         // Add more mappings as needed
       };
 
