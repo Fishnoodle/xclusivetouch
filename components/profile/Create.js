@@ -277,7 +277,6 @@ const Create = ({ id = null, profile = null }) => {
             }}
         /> */}
 
-Social Media
 {socialMedia.map((media, index) => (
     <div key={index}>
         <Typography variant="h6" color="blue-gray" className="-mb-3">
@@ -286,9 +285,10 @@ Social Media
         <Select
             fullWidth
             value={media.platform}
+            className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
             onChange={(e) => {
                 const newMedia = [...socialMedia]
-                newMedia[index].platform = e.target.value
+                newMedia[index] = { ...newMedia[index], platform: e.target.value }
                 setSocialMedia(newMedia)
             }}
         >
@@ -306,15 +306,19 @@ Social Media
             Enter your social media link
         </Typography>
         <Input
-            size='large'
-            
+            size='lg'
+            id='socialMediaLink'
+            placeholder='Social Media Link'
+            className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
+            labelProps={{
+            className: 'before:content-none after:content-none',
+            }}
             value={media.link}
             onChange={(e) => {
                 const newMedia = [...socialMedia]
-                newMedia[index].link = e.target.value
+                newMedia[index] = { ...newMedia[index], link: e.target.value }
                 setSocialMedia(newMedia)
             }}
-            placeholder='Enter your social media link'
         />
     </div>
 ))}
