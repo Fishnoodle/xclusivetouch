@@ -4,7 +4,7 @@ import { useState, React, useEffect } from "react"
 import jwt from "jsonwebtoken"
 import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch } from "react-feather"
 
-const Header = (profile) => {
+const Header = (profile, profilePicture) => {
     // Use States
     const [loading, setLoading] = useState(false)
     
@@ -18,6 +18,7 @@ const Header = (profile) => {
     const [company, setCompany] = useState("")
     const [about, setAbout] = useState("")
     const [socialLinks, setSocialLinks] = useState({})
+    const [profilePictureLink, setProfilePictureLink] = useState("")
 
     const iconMapping = {
         facebook: <Facebook className="text-gray-600" />,
@@ -47,7 +48,9 @@ const Header = (profile) => {
 
         const socials = info?.socialMedia?.[0] || {}
 
-        console.log(socials)
+        setProfilePictureLink(profilePicture)
+
+        console.log(profilePictureLink)
 
         let newSocialLinks = {};
         for (let key in socials) {
@@ -87,6 +90,7 @@ const Header = (profile) => {
             <div className="w-[90%] h-[200px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
                 <div className="w-1/2 h-auto relative">
                     <Image
+                        src={profilePicture}
                         alt="Profile"
                         layout="fill"
                         objectFit="cover"

@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Profile({ id }) {
     // UseStates
     const [profile, setProfile] = useState(false);
+    const [profilePicture, setProfilePicture] = useState('');
 
     useEffect(() => {
         if (id) {
@@ -32,10 +33,12 @@ export default function Profile({ id }) {
             }
 
             const data = await req.json()
-            console.log('Response data:', data);
+            console.log('Response data:', data.url);
 
-            if (data.data !== null){
+            if (data !== null){
                 setProfile(data.data.profile[0])
+                console.log('for profile picture', data.url)
+                setProfilePicture(data.url)
             }
         } catch (err) {
             console.log('Error caught:', err);
@@ -44,7 +47,7 @@ export default function Profile({ id }) {
 
     return (
         <>
-            <Body profile={profile} />
+            <Body profile={profile} profilePicture={profilePicture} />
         </>
     )
 }

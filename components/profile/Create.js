@@ -24,27 +24,30 @@ const Create = ({ id = null, profile = null }) => {
     }
 
     async function handleSubmit(e) {
-        event.preventDefault()
+        e.preventDefault()
+
+        const formData = new FormData();
+
+        formData.append('firstName', firstName);
+        formData.append('lastName', lastName);
+        formData.append('phoneNumber', phone);
+        formData.append('email', email);
+        formData.append('position', occupation);
+        formData.append('company', company);
+        formData.append('about', about);
+        formData.append('primaryColour', headerColour);
+        formData.append('cardColour', cardColour);
+        formData.append('profilePhoto', photo);
+        formData.append('socialMedia', JSON.stringify(socialMedia));
+
+        for (let pair of formData.entries()) {
+            console.log(pair[0]+ ', ' + pair[1]); 
+        }
 
         if (id) {
             const response = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    firstName: firstName,
-                    lastName: lastName,
-                    phoneNumber: phone,
-                    email: email,
-                    position: occupation,
-                    company: company,
-                    about: about,
-                    primaryColour: headerColour,
-                    cardColour: cardColour,
-                    profilePhoto: photo,
-                    socialMedia: socialMedia
-                })
+                body: formData
             })
 
             const data = await response.json()
@@ -56,37 +59,20 @@ const Create = ({ id = null, profile = null }) => {
                 alert(data.error)
             }
         } else {
-
-        const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                firstName: firstName,
-                lastName: lastName,
-                phoneNumber: phone,
-                email: email,
-                position: occupation,
-                company: company,
-                about: about,
-                primaryColour: headerColour,
-                cardColour: cardColour,
-                profilePhoto: photo,
-                socialMedia: socialMedia
+            const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
+                method: 'POST',
+                body: formData,
             })
-        })
 
-        const data = await response.json()
+            const data = await response.json()
 
-        if (!data.error) {
-            alert('Profile created successfully!')
-            window.location.reload();
-        } else {
-            alert(data.error)
+            if (!data.error) {
+                alert('Profile created successfully!')
+                window.location.reload();
+            } else {
+                alert(data.error)
+            }
         }
-    }
-
     }
 
     useEffect(() => {
@@ -96,7 +82,7 @@ const Create = ({ id = null, profile = null }) => {
                     console.log(id)
                     if (profile !== null) {
                         setFirstName(profile.firstName)
-                        setLastName(id.lastName)
+                        setLastName(profile.lastName)
                         setPhone(profile.phoneNumber)
                         setEmail(profile.email)
                         setOccupation(profile.position)
@@ -263,19 +249,20 @@ const Create = ({ id = null, profile = null }) => {
             }}
         />
 
-        {/* <Typography variant="h6" color="blue-gray" className="-mb-3">
+        <Typography variant="h6" color="blue-gray" className="-mb-3">
             Upload a photo
         </Typography>
         <Input
             type="file"
             size="lg"
             placeholder="Photo"
-            onChange={(e) => setPhoto(URL.createObjectURL(e.target.files[0]))}
+            onChange={(e) => setPhoto(e.target.files[0])}
+            accept="image/*"
             className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
             labelProps={{
             className: "before:content-none after:content-none",
             }}
-        /> */}
+        />
 
 {socialMedia.map((media, index) => (
     <div key={index}>
