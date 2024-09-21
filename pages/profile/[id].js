@@ -36,10 +36,15 @@ export default function Profile({ id }) {
             console.log('Response data:', data.url);
 
             if (data !== null){
-                setProfile(data.data.profile[0])
-                console.log('for profile picture', data.url)
-                setProfilePicture(data.url)
+                console.log()
+                setProfile({
+                    ...data.data.profile[0],
+                    url: data.url
+                })
             }
+            setProfilePicture(data.url)
+
+            console.log(profilePicture);
         } catch (err) {
             console.log('Error caught:', err);
         }
@@ -47,7 +52,7 @@ export default function Profile({ id }) {
 
     return (
         <>
-            <Body profile={profile} profilePicture={profilePicture} />
+            {profilePicture !== "" && <Body profile={profile} profilePicture={profilePicture} />}
         </>
     )
 }

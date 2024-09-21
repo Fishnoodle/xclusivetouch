@@ -3,7 +3,8 @@ import Header from "@/components/profile/Header";
 
 const Body = (id, profilePicture) => {
 
-    console.log('BODY PROFILEPICTURE', profilePicture)
+    console.log(id, 'ID')
+    console.log(profilePicture, 'Profile Picture')
 
     return (
         <div>
