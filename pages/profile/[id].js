@@ -33,7 +33,7 @@ export default function Profile({ id }) {
             }
 
             const data = await req.json()
-            console.log('Response data:', data.url);
+            console.log('Response data:', data);
 
             if (data !== null){
                 console.log()

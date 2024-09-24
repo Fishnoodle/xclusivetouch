@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Card, Input, Button, Typography, Textarea } from '@material-tailwind/react';
 import { Select, MenuItem, TextField } from '@mui/material';
 
+const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Youtube', 'Twitch']
+
 const Create = ({ id = null, profile = null }) => {
     // useStates
     const [firstName, setFirstName] = useState('')
@@ -15,12 +17,27 @@ const Create = ({ id = null, profile = null }) => {
     const [cardColour, setCardColour] = useState('#000000')
     const [photo, setPhoto] = useState(null)
     const [socialMedia, setSocialMedia] = useState([{ platform: '', link: '' }])
-    const [link, setLink] = useState('')
 
-    const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Youtube', 'Twitch']
+    const handlePlatformChange = (index, event) => {
+        const newSocialMedia = [...socialMedia]
+        newSocialMedia[index].platform = event.target.value
+        setSocialMedia(newSocialMedia)
+    }
 
-    const handleAdd = () => {
-        setSocialMedia(prev => [...prev, { platform: '', link: '' }])
+    const handleLinkChange = (index, event) => {
+        const newSocialMedia = [...socialMedia]
+        newSocialMedia[index].link = event.target.value
+        setSocialMedia(newSocialMedia)
+    }
+
+    const handleAddSocialMedia = () => {
+        setSocialMedia(prevSocialMedia => [...prevSocialMedia, { platform: '', link: '' }]);
+    }
+
+    const handleRemoveSocialMedia = (index) => {
+        const newSocialMedia = [...socialMedia]
+        newSocialMedia.splice(index, 1)
+        setSocialMedia(newSocialMedia)
     }
 
     async function handleSubmit(e) {
@@ -91,6 +108,16 @@ const Create = ({ id = null, profile = null }) => {
                         setHeaderColour(profile.colours[0]?.primaryColour)
                         setCardColour(profile.colours[0]?.cardColour)
                         setPhoto(profile.colours[0]?.profilePhoto)
+                        
+
+                        // Transform the profile.socialMedia data into the format that the form expects
+                        const initialSocialMedia = profile.socialMedia.map(item => {
+                            const platform = Object.keys(item)[0]
+                            const link = item[platform]
+                            return { platform: platform.charAt(0).toUpperCase() + platform.slice(1), link: link }
+                        })
+
+                        setSocialMedia(initialSocialMedia)
                     } 
                 }
             } catch (err) {
@@ -264,53 +291,46 @@ const Create = ({ id = null, profile = null }) => {
             }}
         />
 
-{socialMedia.map((media, index) => (
-    <div key={index}>
-        <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Choose your social media
-        </Typography>
-        <Select
-            fullWidth
-            value={media.platform}
-            className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
-            onChange={(e) => {
-                const newMedia = [...socialMedia]
-                newMedia[index] = { ...newMedia[index], platform: e.target.value }
-                setSocialMedia(newMedia)
-            }}
-        >
-            <MenuItem value="">
-                <em>None</em>
-            </MenuItem>
-            {socialMediaOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                    {option}
-                </MenuItem>
-            ))}
-        </Select>
+        {/* Social Media */}
+        {socialMedia.map((media, index) => (
+            <div key={index}>
+                <Typography variant='h6' color='blue-gray' className='-mb-3'>
+                    Choose your social media platform
+                </Typography>
+                <Select
+                    fullWidth
+                    value={media.platform}
+                    className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
+                    onChange={(event) => handlePlatformChange(index, event)}
+                >
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    {socialMediaOptions.map((option) => (
+                        <MenuItem key={option} value={option}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Select>
 
-        <Typography variant="h6" color="blue-gray" className="-mb-3">
-            Enter your social media link
-        </Typography>
-        <Input
-            size='lg'
-            id='socialMediaLink'
-            placeholder='Social Media Link'
-            className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
-            labelProps={{
-            className: 'before:content-none after:content-none',
-            }}
-            value={media.link}
-            onChange={(e) => {
-                const newMedia = [...socialMedia]
-                newMedia[index] = { ...newMedia[index], link: e.target.value }
-                setSocialMedia(newMedia)
-            }}
-        />
-    </div>
-))}
-
-        <Button onClick={handleAdd}>Add</Button>
+                <Typography variant='h6' color='blue-gray' className='-mb-3'>
+                    Enter your social media link
+                </Typography>
+                <Input
+                    size='lg'
+                    id='socialMediaLink'
+                    placeholder='Social Media Link'
+                    className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
+                    labelProps={{
+                        className: 'before:content-none after:content-none',
+                    }}
+                    value={media.link}
+                    onChange={(event) => handleLinkChange(index, event)}
+                />
+                <Button onClick={() => handleRemoveSocialMedia(index)} className='mt-5'>Remove</Button>
+            </div>
+        ))}
+            <Button onClick={handleAddSocialMedia}>Add Social Media</Button>
 
         </div>
         <Button className="mt-6" fullWidth onClick={handleSubmit}>

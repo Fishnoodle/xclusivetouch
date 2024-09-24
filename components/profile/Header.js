@@ -48,7 +48,7 @@ const Header = (profile, profilePicture) => {
 
         const socials = info?.socialMedia?.[0] || {}
 
-        setProfilePictureLink(profilePicture)
+        setProfilePictureLink(info.url)
 
         console.log(profilePictureLink)
 
@@ -81,7 +81,7 @@ const Header = (profile, profilePicture) => {
         a.click();
     };
     
-    console.log(headerColour)
+    console.log(profile)
 
     return (
         <div className="overflow-hidden relative">
@@ -89,12 +89,14 @@ const Header = (profile, profilePicture) => {
 
             <div className="w-[90%] h-[200px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
                 <div className="w-1/2 h-auto relative">
-                    <Image
-                        src={profilePicture}
-                        alt="Profile"
-                        layout="fill"
-                        objectFit="cover"
-                    />
+                    <div className='w-full h-full relative'>
+                        <Image
+                            src={profilePictureLink}
+                            alt="Profile"
+                            layout="fill"
+                            objectFit="cover"
+                        />
+                    </div>
                 </div>
 
                 <div style={{ backgroundColor: cardColour }} className="w-3/5 flex flex-col items-start justify-center pl-3">
@@ -128,11 +130,11 @@ const Header = (profile, profilePicture) => {
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
                 <div className="flex space-x-4 overflow-x-auto">
                     {Object.entries(socialLinks).map(([name, link]) => (
-                    <div key={name} className="w-16 h-16 bg-gray-200 rounded flex-none items-center justify-center">
-                        <a href={link} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
-                        {iconMapping[name.toLowerCase()] || name}
-                        </a>
-                    </div>
+                        <div key={name} className="w-16 h-16 bg-gray-200 rounded flex-none items-center justify-center">
+                            <a href={link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
+                                {iconMapping[name.toLowerCase()] || name}
+                            </a>
+                        </div>
                     ))}
                 </div>
             </div>
