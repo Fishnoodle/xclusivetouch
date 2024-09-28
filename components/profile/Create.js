@@ -41,10 +41,10 @@ const Create = ({ id = null, profile = null }) => {
     }
 
     async function handleSubmit(e) {
-        e.preventDefault()
-
+        e.preventDefault();
+    
         const formData = new FormData();
-
+    
         formData.append('firstName', firstName);
         formData.append('lastName', lastName);
         formData.append('phoneNumber', phone);
@@ -56,38 +56,43 @@ const Create = ({ id = null, profile = null }) => {
         formData.append('cardColour', cardColour);
         formData.append('profilePhoto', photo);
         formData.append('socialMedia', JSON.stringify(socialMedia));
-
+    
+        // Log FormData entries
         for (let pair of formData.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
+            console.log(pair[0] + ', ' + pair[1]);
         }
-
+    
         if (id) {
             const response = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`, {
                 method: 'PUT',
                 body: formData
-            })
-
-            const data = await response.json()
-
+            });
+    
+            const data = await response.json();
+    
             if (!data.error) {
-                alert('Profile updated successfully!')
+                alert('Profile updated successfully!');
+                window.scrollTo(0, 0);
                 window.location.reload();
             } else {
-                alert(data.error)
+                alert(data.error);
             }
         } else {
+            console.log(firstName);
+    
             const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
                 method: 'POST',
                 body: formData,
-            })
-
-            const data = await response.json()
-
+            });
+    
+            const data = await response.json();
+    
             if (!data.error) {
-                alert('Profile created successfully!')
+                alert('Profile created successfully!');
+                window.scrollTo(0, 0);
                 window.location.reload();
             } else {
-                alert(data.error)
+                alert(data.error);
             }
         }
     }
@@ -247,34 +252,34 @@ const Create = ({ id = null, profile = null }) => {
         <Typography variant="h6" color="blue-gray" className="-mb-3">
             Choose a colour for your heading
         </Typography>
-        <Input
-            type="color" // Add this line
+        <Select
             size="lg"
             id="headerColour"
-            placeholder="Header Colour"
             value={headerColour}
             onChange={(e) => setHeaderColour(e.target.value)}
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
             labelProps={{
-            className: "before:content-none after:content-none",
+                className: "before:content-none after:content-none",
             }}
-        />
+        >
+            <MenuItem value="#FFFFFF">White</MenuItem>
+        </Select>
 
         <Typography variant="h6" color="blue-gray" className="-mb-3">
             Choose a colour for your Card
         </Typography>
-        <Input
-            type="color" // Add this line
+        <Select
             size="lg"
             id="cardColour"
-            placeholder="Card Colour"
             value={cardColour}
             onChange={(e) => setCardColour(e.target.value)}
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
             labelProps={{
-            className: "before:content-none after:content-none",
+                className: "before:content-none after:content-none",
             }}
-        />
+        >
+            <MenuItem value="#000000">Black</MenuItem>
+        </Select>
 
         <Typography variant="h6" color="blue-gray" className="-mb-3">
             Upload a photo
@@ -294,7 +299,7 @@ const Create = ({ id = null, profile = null }) => {
         {/* Social Media */}
         {socialMedia.map((media, index) => (
             <div key={index}>
-                <Typography variant='h6' color='blue-gray' className='-mb-3'>
+                <Typography variant='h6' color='blue-gray' className='-mb-1'>
                     Choose your social media platform
                 </Typography>
                 <Select
@@ -313,7 +318,7 @@ const Create = ({ id = null, profile = null }) => {
                     ))}
                 </Select>
 
-                <Typography variant='h6' color='blue-gray' className='-mb-3'>
+                <Typography variant='h6' color='blue-gray' className='-mb-1 mt-3'>
                     Enter your social media link
                 </Typography>
                 <Input

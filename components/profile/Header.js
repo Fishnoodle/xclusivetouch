@@ -87,19 +87,17 @@ const Header = (profile, profilePicture) => {
         <div className="overflow-hidden relative">
             <div style={{ backgroundColor: headerColour, width: '100vw', height: '200px' }}/>
 
-            <div className="w-[90%] h-[200px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
-                <div className="w-1/2 h-auto relative">
-                    <div className='w-full h-full relative'>
-                        <Image
-                            src={profilePictureLink}
-                            alt="Profile"
-                            layout="fill"
-                            objectFit="cover"
-                        />
-                    </div>
+            <div className="w-[90%] h-[200px] md:h-[400px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
+                <div className="w-1/2 h-full relative">
+                    <Image
+                        src={profilePictureLink}
+                        alt="Profile"
+                        layout="fill"
+                        style={{ objectFit: 'cover' }}
+                    />
                 </div>
 
-                <div style={{ backgroundColor: cardColour }} className="w-3/5 flex flex-col items-start justify-center pl-3">
+                <div style={{ backgroundColor: cardColour }} className="w-1/2 flex flex-col items-start justify-center pl-3">
                     <div className="mb-2 pl-2">
                         <span className="block text-white text-[22px] font-semibold"> {firstName}</span>
                         <span className="block text-white text-[22px] font-semibold"> {lastName}</span>
@@ -109,7 +107,6 @@ const Header = (profile, profilePicture) => {
                         <span className="block text-white text-[14px] font-light"> {company}</span>
                     </div>
                 </div>
-
             </div>
 
             <div className="w-[90%] top-[50%] flex justify-center items-center space-x-10 mx-auto -translate-y-20">
