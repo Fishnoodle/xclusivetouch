@@ -252,18 +252,16 @@ const Create = ({ id = null, profile = null }) => {
         <Typography variant="h6" color="blue-gray" className="-mb-3">
             Choose a colour for your heading
         </Typography>
-        <Select
-            size="lg"
+        <TextField
             id="headerColour"
+            type="color"
             value={headerColour}
             onChange={(e) => setHeaderColour(e.target.value)}
             className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-            labelProps={{
+            InputLabelProps={{
                 className: "before:content-none after:content-none",
             }}
-        >
-            <MenuItem value="#FFFFFF">White</MenuItem>
-        </Select>
+        />
 
         <Typography variant="h6" color="blue-gray" className="-mb-3">
             Choose a colour for your Card
@@ -279,6 +277,7 @@ const Create = ({ id = null, profile = null }) => {
             }}
         >
             <MenuItem value="#000000">Black</MenuItem>
+            <MenuItem value="#FFFFFF">White</MenuItem>
         </Select>
 
         <Typography variant="h6" color="blue-gray" className="-mb-3">

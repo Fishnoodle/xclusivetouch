@@ -87,7 +87,7 @@ const Header = (profile, profilePicture) => {
         <div className="overflow-hidden relative">
             <div style={{ backgroundColor: headerColour, width: '100vw', height: '200px' }}/>
 
-            <div className="w-[90%] h-[200px] md:h-[400px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg">
+            <div className="w-[90%] h-[200px] md:h-[400px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg shadow-2xl shadow-gray-900">
                 <div className="w-1/2 h-full relative">
                     <Image
                         src={profilePictureLink}
@@ -97,16 +97,22 @@ const Header = (profile, profilePicture) => {
                     />
                 </div>
 
-                <div style={{ backgroundColor: cardColour }} className="w-1/2 flex flex-col items-start justify-center pl-3">
+                <div
+                    style={{ backgroundColor: cardColour }}
+                    className={`w-1/2 flex flex-col items-start justify-center pl-3 ${
+                        cardColour === '#000000' ? 'text-white' : 'text-black'
+                    }`}
+                >
                     <div className="mb-2 pl-2">
-                        <span className="block text-white text-[22px] font-semibold"> {firstName}</span>
-                        <span className="block text-white text-[22px] font-semibold"> {lastName}</span>
+                        <span className="block text-[22px] font-semibold">{firstName}</span>
+                        <span className="block text-[22px] font-semibold">{lastName}</span>
                     </div>
                     <div className="pl-2">
-                        <span className="block text-white text-[14px] font-light"> {position}</span>
-                        <span className="block text-white text-[14px] font-light"> {company}</span>
+                        <span className="block text-[14px] font-light">{position}</span>
+                        <span className="block text-[14px] font-light">{company}</span>
                     </div>
                 </div>
+
             </div>
 
             <div className="w-[90%] top-[50%] flex justify-center items-center space-x-10 mx-auto -translate-y-20">

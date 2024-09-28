@@ -31,7 +31,7 @@ export default function RegisterSection() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: fullName.replace(/\s+/g, ''), // Sent without spaces
+        username: fullName.replace(/\s+/g, '').toLowerCase(), // Sent without spaces
         email: email,
         password: password
       })
