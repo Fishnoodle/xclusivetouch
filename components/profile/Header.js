@@ -109,12 +109,13 @@ const Header = (profile, profilePicture) => {
                     }`}
                 >
                     <div className="mb-2 pl-2">
-                        <span className="block text-[22px] font-semibold">{firstName}</span>
-                        <span className="block text-[22px] font-semibold">{lastName}</span>
+                        <span className="block text-[30px] font-semibold">
+                            {firstName} {lastName}
+                        </span>
                     </div>
                     <div className="pl-2">
-                        <span className="block text-[14px] font-light">{position}</span>
-                        <span className="block text-[14px] font-light">{company}</span>
+                        <span className="block text-[16px] font-light">{position}</span>
+                        <span className="block text-[16px] font-light">{company}</span>
                     </div>
                 </div>
 
