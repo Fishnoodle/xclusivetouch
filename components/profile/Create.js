@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Input, Button, Typography, Textarea } from '@material-tailwind/react';
 import { Select, MenuItem, TextField } from '@mui/material';
 
-const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Youtube', 'Twitch']
+const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Youtube', 'Twitch', 'Other']
 
 const Create = ({ id = null, profile = null }) => {
     // useStates

@@ -2,7 +2,7 @@ import { Button } from "@material-tailwind/react"
 import Image from "next/image"
 import { useState, React, useEffect } from "react"
 import jwt from "jsonwebtoken"
-import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch } from "react-feather"
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch, Link } from "react-feather"
 
 const Header = (profile, profilePicture) => {
     // Use States
@@ -27,6 +27,7 @@ const Header = (profile, profilePicture) => {
         linkedin: <Linkedin className="text-gray-600" />,
         youtube: <Youtube className="text-gray-600" />,
         twitch: <Twitch className="text-gray-600" />,
+        other: <Link className="text-gray-600" />,
         // Add more mappings as needed
       };
 
@@ -46,19 +47,21 @@ const Header = (profile, profilePicture) => {
         setHeaderColour(info?.colours?.[0]?.primaryColour)
         setCardColour(info?.colours?.[0]?.cardColour)
 
-        const socials = info?.socialMedia?.[0] || {}
-
-        setProfilePictureLink(info.url)
-
-        console.log(profilePictureLink)
-
+        const socialsArray = info?.socialMedia || [];
+        
+        setProfilePictureLink(info.url);
+        
+        console.log(profilePictureLink);
+        
         let newSocialLinks = {};
-        for (let key in socials) {
-            if (key !== '_id') {
-                newSocialLinks[key] = socials[key];
+        socialsArray.forEach(social => {
+            for (let key in social) {
+                if (key !== '_id') {
+                    newSocialLinks[key] = social[key];
+                }
             }
-        }
-
+        });
+        
         setSocialLinks(newSocialLinks);
 
     }, [profile]);
