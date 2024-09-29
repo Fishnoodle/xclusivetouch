@@ -14,6 +14,7 @@ const Header = (profile, profilePicture) => {
     const [lastName, setLastName] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
     const [email, setEmail] = useState("")
+    const [companyAddress, setCompanyAddress] = useState("")
     const [position, setPosition] = useState("")
     const [company, setCompany] = useState("")
     const [about, setAbout] = useState("")
@@ -40,6 +41,7 @@ const Header = (profile, profilePicture) => {
         setLastName(info.lastName);
         setPhoneNumber(info.phoneNumber);
         setEmail(info.email);
+        setCompanyAddress(info.companyAddress);
         setPosition(info.position);
         setCompany(info.company);
         setAbout(info.about);
@@ -128,6 +130,11 @@ const Header = (profile, profilePicture) => {
             </div>
 
             <div className="mx-5 -translate-y-1/2">
+                <p className="text-2xl font-bold mb-3"> Company Address </p>
+                <p> {companyAddress} </p>
+            </div>
+
+            <div className="mx-5 -translate-y-1/2 mt-10">
                 <p className="text-2xl font-bold mb-3"> About </p>
                 <div dangerouslySetInnerHTML={{ __html: about.replace(/\n/g, '<br />') }} />
             </div>
