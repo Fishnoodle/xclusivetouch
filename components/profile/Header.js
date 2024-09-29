@@ -130,12 +130,12 @@ const Header = (profile, profilePicture) => {
                 </Button>
             </div>
 
-            <div className="mx-5 -translate-y-1/2 mt-5 md:mt-10">
+            {companyAddress && <div className="mx-5 -translate-y-1/2 mt-5 md:mt-10">
                 <p className="text-2xl font-bold mb-3"> Company Address </p>
                 <p> {companyAddress} </p>
-            </div>
+            </div>}
 
-            <div className="mx-5 -translate-y-1/2 mt-10 md:mt-20">
+            <div className="mx-5 -translate-y-1/2 mt-24 md:mt-20">
                 <p className="text-2xl font-bold mb-3"> About </p>
                 <div dangerouslySetInnerHTML={{ __html: about.replace(/\n/g, '<br />') }} />
             </div>
