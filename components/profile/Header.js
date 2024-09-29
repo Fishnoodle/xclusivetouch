@@ -92,7 +92,7 @@ const Header = (profile, profilePicture) => {
         <div className="overflow-hidden relative">
             <div style={{ backgroundColor: headerColour, width: '100vw', height: '200px' }}/>
 
-            <div className="w-[90%] h-[200px] md:h-[400px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg shadow-2xl shadow-gray-900">
+            <div className="w-[90%] h-[200px] md:h-[400px] -translate-y-1/2 mx-auto flex overflow-hidden rounded-lg shadow-2xl shadow-gray-900 mt-5 md:mt-10">
                 <div className="w-1/2 h-full relative">
                     <Image
                         src={profilePictureLink}
@@ -109,19 +109,19 @@ const Header = (profile, profilePicture) => {
                     }`}
                 >
                     <div className="mb-2 pl-2">
-                        <span className="block text-[30px] font-semibold">
+                        <span className="block text-[26px] md:text-[55px] font-semibold">
                             {firstName} {lastName}
                         </span>
                     </div>
                     <div className="pl-2">
-                        <span className="block text-[16px] font-light">{position}</span>
-                        <span className="block text-[16px] font-light">{company}</span>
+                        <span className="block text-[16px] md:text-[36px] font-light">{position}</span>
+                        <span className="block text-[16px] md:text-[36px] font-light">@ {company}</span>
                     </div>
                 </div>
 
             </div>
 
-            <div className="w-[90%] top-[50%] flex justify-center items-center space-x-10 mx-auto -translate-y-20">
+            <div className="w-[90%] top-[50%] flex justify-center items-center space-x-10 mx-auto -translate-y-20 mt-5 md:mt-10">
                 <Button fullWidth variant="outlined" size="lg" className="text-sm" onClick={createVCard}>
                     <span className="text-[60%]">Save Contact</span>
                 </Button>
@@ -130,17 +130,17 @@ const Header = (profile, profilePicture) => {
                 </Button>
             </div>
 
-            <div className="mx-5 -translate-y-1/2">
+            <div className="mx-5 -translate-y-1/2 mt-5 md:mt-10">
                 <p className="text-2xl font-bold mb-3"> Company Address </p>
                 <p> {companyAddress} </p>
             </div>
 
-            <div className="mx-5 -translate-y-1/2 mt-10">
+            <div className="mx-5 -translate-y-1/2 mt-10 md:mt-20">
                 <p className="text-2xl font-bold mb-3"> About </p>
                 <div dangerouslySetInnerHTML={{ __html: about.replace(/\n/g, '<br />') }} />
             </div>
 
-            <div className="mx-5 -translate-y-1/5">
+            <div className="mx-5 -translate-y-1/5 mt-5 md:mt-10">
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
                 <div className="flex space-x-4 overflow-x-auto">
                     {Object.entries(socialLinks).map(([name, link]) => (
