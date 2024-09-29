@@ -246,7 +246,7 @@ const Create = ({ id = null, profile = null }) => {
             placeholder="About"
             value={about}
             onChange={(e) => setAbout(e.target.value)}
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
         />
 
         <Typography variant="h6" color="blue-gray" className="-mb-3">

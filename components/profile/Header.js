@@ -129,7 +129,7 @@ const Header = (profile, profilePicture) => {
 
             <div className="mx-5 -translate-y-1/2">
                 <p className="text-2xl font-bold mb-3"> About </p>
-                <p>{about}</p>
+                <div dangerouslySetInnerHTML={{ __html: about.replace(/\n/g, '<br />') }} />
             </div>
 
             <div className="mx-5 -translate-y-1/5">
