@@ -74,7 +74,7 @@ const Header = (profile, profilePicture) => {
             'VERSION:3.0',
             `N:;${firstName} ${lastName};;;`,
             `FN:${firstName} ${lastName}`,
-            `TEL;TYPE=work,voice;VALUE=uri:tel:${phoneNumber}`,
+            `TEL;TYPE=work,voice:${phoneNumber}`,
             `EMAIL:${email}`,
             `ORG:${company}`,
             'END:VCARD',
