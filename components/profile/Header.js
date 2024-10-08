@@ -2,7 +2,8 @@ import { Button } from "@material-tailwind/react"
 import Image from "next/image"
 import { useState, React, useEffect } from "react"
 import jwt from "jsonwebtoken"
-import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch, Link } from "react-feather"
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch, Link, Globe } from "react-feather"
+import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
 
 const Header = (profile, profilePicture) => {
     // Use States
@@ -22,15 +23,15 @@ const Header = (profile, profilePicture) => {
     const [profilePictureLink, setProfilePictureLink] = useState("")
 
     const iconMapping = {
-        facebook: <Facebook className="text-gray-600" />,
-        instagram: <Instagram className="text-gray-600" />,
-        twitter: <Twitter className="text-gray-600" />,
-        linkedin: <Linkedin className="text-gray-600" />,
-        youtube: <Youtube className="text-gray-600" />,
-        twitch: <Twitch className="text-gray-600" />,
-        other: <Link className="text-gray-600" />,
+        facebook: <FaFacebook className="text-blue-600" size={32} />,
+        instagram: <FaInstagram className="text-pink-600" size={32} />,
+        twitter: <FaTwitter className="text-blue-400" size={32} />, // Change to X twtiterelol
+        linkedin: <FaLinkedin className="text-blue-700" size={32} />,
+        youtube: <FaYoutube className="text-red-600" size={32} />,
+        twitch: <FaTwitch className="text-purple-600" size={32} />,
+        other: <Globe className="text-black-600" />, // You can keep this as is or find a suitable icon
         // Add more mappings as needed
-      };
+    };
 
     useEffect(() => {
         const info = profile.id.profile
@@ -144,7 +145,7 @@ const Header = (profile, profilePicture) => {
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
                 <div className="flex space-x-4 overflow-x-auto">
                     {Object.entries(socialLinks).map(([name, link]) => (
-                        <div key={name} className="w-16 h-16 bg-gray-200 rounded flex-none items-center justify-center">
+                        <div key={name} className="w-16 h-16 bg-gray-200 rounded-2xl flex-none items-center justify-center">
                             <a href={link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
                                 {iconMapping[name.toLowerCase()] || name}
                             </a>

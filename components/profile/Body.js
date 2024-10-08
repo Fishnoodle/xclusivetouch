@@ -10,10 +10,10 @@ const Body = (id, profilePicture) => {
     return (
         <div className="flex flex-col min-h-screen">
             <Header id={id} profilePicture={profilePicture} />
-            <div className="flex-grow"></div>
-            <Footer className="mt-5" />
+            <div className="flex-grow my-8"></div>
+            <Footer />
         </div>
-    )
+    );
 }
 
 export default Body
