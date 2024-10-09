@@ -1,6 +1,6 @@
 import { Button } from "@material-tailwind/react"
 import Image from "next/image"
-import { useState, React, useEffect } from "react"
+import { useState, React, useEffect, useRef} from "react"
 import jwt from "jsonwebtoken"
 import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch, Link, Globe } from "react-feather"
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
@@ -21,6 +21,9 @@ const Header = (profile, profilePicture) => {
     const [about, setAbout] = useState("")
     const [socialLinks, setSocialLinks] = useState({})
     const [profilePictureLink, setProfilePictureLink] = useState("")
+
+    const aboutRef = useRef(null);
+    const [isMultiLine, setIsMultiLine] = useState(false);
 
     const iconMapping = {
         facebook: <FaFacebook className="text-blue-600" size={32} />,
@@ -68,6 +71,14 @@ const Header = (profile, profilePicture) => {
         setSocialLinks(newSocialLinks);
 
     }, [profile]);
+
+    useEffect(() => {
+        if (aboutRef.current) {
+            const lineHeight = parseInt(window.getComputedStyle(aboutRef.current).lineHeight, 10);
+            const aboutHeight = aboutRef.current.offsetHeight;
+            setIsMultiLine(aboutHeight > lineHeight);
+        }
+    })
 
     const createVCard = () => {
         const vCardData = [
@@ -131,19 +142,23 @@ const Header = (profile, profilePicture) => {
                 </Button>
             </div>
 
-            {companyAddress && <div className="mx-5 -translate-y-1/2 mt-5 md:mt-10">
-                <p className="text-2xl font-bold mb-3"> Company Address </p>
-                <p> {companyAddress} </p>
-            </div>}
+            <div className={`mx-5 -translate-y-1/2 ${isMultiLine ? 'mt-20 md:mt-24' : 'mt-10 md:mt-12'} flex flex-col space-y-5`}>
+            {companyAddress && (
+                <div>
+                    <p className="text-2xl font-bold mb-3">Company Address</p>
+                    <p>{companyAddress}</p>
+                </div>
+            )}
 
-            <div className="mx-5 -translate-y-1/2 mt-24 md:mt-20">
-                <p className="text-2xl font-bold mb-3"> About </p>
-                <div dangerouslySetInnerHTML={{ __html: about.replace(/\n/g, '<br />') }} />
+                <div>
+                    <p className="text-2xl font-bold mb-3">About</p>
+                    <div ref={aboutRef} dangerouslySetInnerHTML={{ __html: about.replace(/\n/g, '<br />') }} />
+                </div>
             </div>
 
             <div className="mx-5 -translate-y-1/5 mt-5 md:mt-10">
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
-                <div className="flex space-x-4 overflow-x-auto">
+                {/* <div className="flex space-x-4 overflow-x-auto">
                     {Object.entries(socialLinks).map(([name, link]) => (
                         <div key={name} className="w-16 h-16 bg-gray-200 rounded-2xl flex-none items-center justify-center">
                             <a href={link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
@@ -151,7 +166,7 @@ const Header = (profile, profilePicture) => {
                             </a>
                         </div>
                     ))}
-                </div>
+                </div> */}
             </div>
 
         </div>
