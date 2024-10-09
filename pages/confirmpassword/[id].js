@@ -3,8 +3,12 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { useRouter } from "next/router";
 
-export default function ConfirmPassword({ id }) {
+export default function ConfirmPassword() {
+    const router = useRouter();
+    const { id } = router.query;
+
     // Usestates
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +19,12 @@ export default function ConfirmPassword({ id }) {
     async function confirm(event) {
         event.preventDefault();
 
-        const response = await fetch('https://api.xclusivetouch.ca/api/confirmreset/' + id, {
+        if (!id) {
+            toast.error('Invalid request: ID is missing');
+            return;
+        }
+
+        const response = await fetch(`https://api.xclusivetouch.ca/api/confirmreset/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -24,17 +33,17 @@ export default function ConfirmPassword({ id }) {
                 password: password,
                 confirmPassword: confirmPassword
             })
-        })
+        });
 
-        const data = await response.json()
-        console.log(data)
+        const data = await response.json();
+        console.log(data);
 
         if (!data.error) {
-            toast.success('Password reset successful! You can now login')
-            window.location.href = '/login'
+            toast.success('Password reset successful! You can now login');
+            window.location.href = '/login';
         } else {
-            console.log('err')
-            toast.error('Password reset failed: ' + data.error)
+            console.log('err');
+            toast.error('Password reset failed: ' + data.error);
         }
     }
 
