@@ -80,9 +80,9 @@ export default function LoginSection() {
                   Password
                 </label>
                 <div className="text-sm">
-                  <a href="#" className="font-semibold text-[#D4AF37]">
+                  <Link href="/resetpassword" className="font-semibold text-[#D4AF37]">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="mt-2">
