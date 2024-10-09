@@ -158,7 +158,7 @@ const Header = (profile, profilePicture) => {
 
             <div className="mx-5 -translate-y-1/5 mt-5 md:mt-10">
                 <p className="text-2xl font-bold mb-3"> Social Media Links </p>
-                {/* <div className="flex space-x-4 overflow-x-auto">
+                <div className="flex space-x-4 overflow-x-auto">
                     {Object.entries(socialLinks).map(([name, link]) => (
                         <div key={name} className="w-16 h-16 bg-gray-200 rounded-2xl flex-none items-center justify-center">
                             <a href={link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
@@ -166,7 +166,7 @@ const Header = (profile, profilePicture) => {
                             </a>
                         </div>
                     ))}
-                </div> */}
+                </div>
             </div>
 
         </div>
