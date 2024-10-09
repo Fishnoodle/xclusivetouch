@@ -30,7 +30,7 @@ export default function Profile({ id }) {
             if (req.ok) {
                 console.log('Response OK');
             } else {
-                console.log('Response not OK', req.status);
+                return <Login />;
             }
 
             const data = await req.json()
@@ -49,10 +49,6 @@ export default function Profile({ id }) {
         } catch (err) {
             console.log('Error caught:', err);
         }
-    }
-
-    if (!profile) {
-        return <Login />;
     }
 
     return (
