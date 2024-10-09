@@ -15,6 +15,7 @@ module.exports = withMT({
       colors: {
         hoverColor: '#ffaa17',
         darkRed: '#ea0638',
+        gold: '#D4AF37',
       },
       fontFamily: {
         'sans': ['Poppins', 'sans-serif'],

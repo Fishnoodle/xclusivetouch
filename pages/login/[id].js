@@ -10,6 +10,7 @@ import {toast, Toaster} from 'react-hot-toast';
 import Body from "@/components/profile/Body";
 import Create from "@/components/profile/Create";
 import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
+import MultiStepForm from "@/components/Onboarding";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -61,8 +62,12 @@ export default function Profile({ id }) {
       console.log('Error caught:', err);
     }
   }
+  
+  if (!profile) {
+    return <MultiStepForm />;
+  }
 
-  if (!profile || editMode) {
+  if (editMode) {
     return <Create {...(editMode ? { id, profile } : {})} />;
   }
 

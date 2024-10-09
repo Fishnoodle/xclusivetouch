@@ -2,6 +2,7 @@ import Body from "@/components/profile/Body";
 import { useEffect } from "react";
 import { Inter } from "next/font/google";
 import { useState } from "react";
+import Login from "../login";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,6 +49,10 @@ export default function Profile({ id }) {
         } catch (err) {
             console.log('Error caught:', err);
         }
+    }
+
+    if (!profile) {
+        return <Login />;
     }
 
     return (
