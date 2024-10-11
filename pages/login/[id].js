@@ -6,11 +6,14 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import jwt from 'jsonwebtoken';
 import {toast, Toaster} from 'react-hot-toast';
+import { RotatingLines } from 'react-loader-spinner';
 
 import Body from "@/components/profile/Body";
 import Create from "@/components/profile/Create";
 import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
 import MultiStepForm from "@/components/Onboarding";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +22,8 @@ export default function Profile({ id }) {
   const [profile, setProfile] = useState(false);
   const [username, setUsername] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  
+  const [loading, setLoading] = useState(true);
 
   const handleClick = () => {   
     window.location.href = `/profile/${username}`
@@ -60,9 +65,29 @@ export default function Profile({ id }) {
       }
     } catch (err) {
       console.log('Error caught:', err);
+    } finally {
+      setLoading(false);
     }
   }
   
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <RotatingLines
+          visible={true}
+          height="96"
+          width="96"
+          strokeColor="#D4AF37"
+          strokeWidth="5"
+          animationDuration="0.75"
+          ariaLabel="rotating-lines-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+        />
+      </div>
+    );
+  }
+
   if (!profile) {
     return <MultiStepForm />;
   }
@@ -73,11 +98,12 @@ export default function Profile({ id }) {
 
   return (
     <>
+      <Navbar />
       <Toaster />
       <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 py-4">
 
-      <Card className='mt-6 w-96 mb-6'>
-        <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
+        <Card className='mt-6 w-96 mb-6'>
+          <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
             <Image 
               src='/assets/hero_img.png'
               width={250}
@@ -129,6 +155,7 @@ export default function Profile({ id }) {
         </Card>
 
       </div>
+      <Footer />
     </>
   )
 }

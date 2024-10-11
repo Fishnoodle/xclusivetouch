@@ -11,14 +11,13 @@ export default function RegisterSection() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false);
-
+  const [buttonText, setButtonText] = useState('Sign Up')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   async function register(event) {
     event.preventDefault()
-
-    console.log(email, password, confirmPassword)
+    setButtonText('Signing Up')
 
     if (password !== confirmPassword) {
       toast.error('Passwords do not match!')
@@ -46,6 +45,7 @@ export default function RegisterSection() {
     } else {
       console.log('ERRO')
       toast.error('Registration Failed' + data.error)
+      setButtonText('Sign Up')
     }
   }
   
@@ -169,7 +169,7 @@ export default function RegisterSection() {
                   register(event)
                 }}
               >
-                Sign Up
+                {buttonText}
               </button>
             </div>
           </form>

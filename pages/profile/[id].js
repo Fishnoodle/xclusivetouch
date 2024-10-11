@@ -1,8 +1,8 @@
 import Body from "@/components/profile/Body";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
-import { useState } from "react";
 import Login from "../login";
+import { RotatingLines } from 'react-loader-spinner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,6 +10,7 @@ export default function Profile({ id }) {
     // UseStates
     const [profile, setProfile] = useState(false);
     const [profilePicture, setProfilePicture] = useState('');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (id) {
@@ -17,14 +18,14 @@ export default function Profile({ id }) {
 
             const token = localStorage.getItem("token");
             console.log('Token:', token);
-            fetchUser()
+            fetchUser();
         }
-    }, [id])
+    }, [id]);
 
     async function fetchUser() {
         try {
             console.log('About to make fetch request');
-            const req = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`)
+            const req = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`);
             console.log('Fetch request made');
 
             if (req.ok) {
@@ -33,22 +34,39 @@ export default function Profile({ id }) {
                 console.log('Response not OK', req.status);
             }
 
-            const data = await req.json()
+            const data = await req.json();
             console.log('Response data:', data);
 
-            if (data !== null){
-                console.log()
+            if (data !== null) {
                 setProfile({
                     ...data.data.profile[0],
                     url: data.url
-                })
+                });
+                setProfilePicture(data.url);
             }
-            setProfilePicture(data.url)
-
-            console.log(profilePicture);
         } catch (err) {
             console.log('Error caught:', err);
+        } finally {
+            setLoading(false);
         }
+    }
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <RotatingLines
+                    visible={true}
+                    height="96"
+                    width="96"
+                    strokeColor="#D4AF37"
+                    strokeWidth="5"
+                    animationDuration="0.75"
+                    ariaLabel="rotating-lines-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                />
+            </div>
+        );
     }
 
     if (!profile) {
@@ -59,13 +77,13 @@ export default function Profile({ id }) {
         <>
             {profilePicture !== "" && <Body profile={profile} profilePicture={profilePicture} />}
         </>
-    )
+    );
 }
 
 export async function getServerSideProps(context) {
     const { id } = context.params;
-  
+
     return {
-      props: { id }, // will be passed to the page component as props
+        props: { id }, // will be passed to the page component as props
     };
-  }
+}

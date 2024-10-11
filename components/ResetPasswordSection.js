@@ -6,9 +6,11 @@ import Link from 'next/link';
 export default function ResetPasswordSection() {
     // Usestates
     const [email, setEmail] = useState('');
+    const [buttonText, setButtonText] = useState('Reset Password');
 
     async function reset(event) {
         event.preventDefault();
+        setButtonText('Resetting Password');
 
         const response = await fetch('https://api.xclusivetouch.ca/api/forgotpassword', {
             method: 'POST',
@@ -28,6 +30,7 @@ export default function ResetPasswordSection() {
         } else {
             console.log('err')
             toast.error('Password reset failed: ' + data.error)
+            setButtonText('Reset Password')
         }
     }
 
@@ -70,7 +73,7 @@ export default function ResetPasswordSection() {
                                 ripple='light'
                                 onClick={reset}
                             >
-                                Reset Password
+                                {buttonText}
                             </Button>
                         </div>
                     </form>
