@@ -4,6 +4,7 @@ import { useState, React, useEffect, useRef} from "react"
 import jwt from "jsonwebtoken"
 import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch, Link, Globe } from "react-feather"
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
+import toast from "react-hot-toast"
 
 const Header = (profile, profilePicture) => {
     // Use States
@@ -25,6 +26,13 @@ const Header = (profile, profilePicture) => {
     const aboutRef = useRef(null);
     const [isExpanded, setIsExpanded] = useState(false);
     const [isMultiLine, setIsMultiLine] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: ''
+    });
 
     const iconMapping = {
         facebook: <FaFacebook className="text-blue-600" size={32} />,
@@ -98,12 +106,66 @@ const Header = (profile, profilePicture) => {
         a.download = 'contact.vcf';
         a.click();
     };
-    
-    console.log(profile)
 
     const toggleExpand = () => {
       setIsExpanded(!isExpanded);
     };
+
+    const exchangeContact = () => {
+      setShowModal(true);
+    }
+    
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    }
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+
+      const id = profile.id.profile._id
+
+      try {
+        const response = await fetch(`https://api.xclusivetouch.ca/api/exchangeContact/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+          })
+        })
+
+        const data = await response.json()
+        console.log(data.error)
+
+        if (!data.error) {
+          toast.success('Contact exchanged successfully')
+        } else {
+          toast.error('Contact exchange failed' + data.error)
+        }
+
+        setTimeout(() => {
+          setLoading(false)
+          window.location.reload()
+        }, 3000)
+
+        setShowModal(false);
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false)
+      }
+    };
+
+    const handleCloseModal = (e) => {
+      if (e.target.id === 'modal-background') {
+        setShowModal(false);
+      }
+    }
 
     return (
         <div className="overflow-hidden relative">
@@ -147,7 +209,7 @@ const Header = (profile, profilePicture) => {
               </Button>
             </div>
             <div className="flex justify-center items-center mt-4">
-              <Button fullWidth variant="gradient" size="lg" className="text-sm">
+              <Button fullWidth variant="gradient" size="lg" className="text-sm" onClick={exchangeContact}>
                 <span className="text-[60%]">Exchange Profile</span>
               </Button>
             </div>
@@ -184,6 +246,54 @@ const Header = (profile, profilePicture) => {
               ))}
             </div>
           </div>
+
+          {showModal && (
+            <div id='modal-background' className="fixed inset-0 flex items-end justify-center bg-black bg-opacity-50">
+              <div className='bg-white w-full md:1/2 p-6 rounded-t-lg'>
+                <h2 className='text-xl font-bold mb-4'>Exchange Contact</h2>
+                  <form onSubmit={handleSubmit} className='space-y-4'>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700'>Name</label>
+                      <input
+                        type='text'
+                        name='name'
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2'
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700'>Email</label>
+                      <input
+                        type='email'
+                        name='email'
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className='mt-1 block w-full border border-gray-300 ronded-md shadow-sm p-2'
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className='block text-sm font-medium text-gray-700'>Message</label>
+                      <textarea
+                        name='message'
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2'
+                        required
+                      />
+                    </div>
+                    <div className='flex justify-end'>
+                      <Button type='submit' variant='gradient' size='lg' className='text-sm' disabled={loading}>
+                        {loading ? 'Loading...' : 'Send'}
+                      </Button>
+                    </div>
+                  </form>
+              </div>
+            </div>
+            
+          )}
         </div>
       );
 }
