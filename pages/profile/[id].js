@@ -6,21 +6,17 @@ import { RotatingLines } from 'react-loader-spinner';
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Profile({ id }) {
+export default function Profile({ id, initialProfile, initialProfilePicture }) {
     // UseStates
-    const [profile, setProfile] = useState(false);
-    const [profilePicture, setProfilePicture] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [profile, setProfile] = useState(initialProfile);
+    const [profilePicture, setProfilePicture] = useState(initialProfilePicture);
+    const [loading, setLoading] = useState(!initialProfile);
 
     useEffect(() => {
-        if (id) {
-            console.log(id);
-
-            const token = localStorage.getItem("token");
-            console.log('Token:', token);
+        if (!initialProfile && id) {
             fetchUser();
         }
-    }, [id]);
+    }, [id, initialProfile]);
 
     async function fetchUser() {
         try {
@@ -83,7 +79,38 @@ export default function Profile({ id }) {
 export async function getServerSideProps(context) {
     const { id } = context.params;
 
-    return {
-        props: { id }, // will be passed to the page component as props
-    };
+    try {
+        const req = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`);
+        const data = await req.json();
+
+        if (data !== null) {
+            return {
+                props: {
+                    id,
+                    initialProfile: {
+                        ...data.data.profile[0],
+                        url: data.url
+                    },
+                    initialProfilePicture: data.url
+                }
+            };
+        } else {
+            return {
+                props: {
+                    id,
+                    initialProfile: null,
+                    initialProfilePicture: ''
+                }
+            };
+        }
+    } catch (err) {
+        console.log('Error caught:', err);
+        return {
+            props: {
+                id,
+                initialProfile: null,
+                initialProfilePicture: ''
+            }
+        };
+    }
 }
