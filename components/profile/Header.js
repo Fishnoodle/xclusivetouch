@@ -1,12 +1,12 @@
 import { Button } from "@material-tailwind/react"
 import Image from "next/image"
-import { useState, React, useEffect, useRef} from "react"
-import jwt from "jsonwebtoken"
-import { Facebook, Twitter, Linkedin, Instagram, Youtube, Twitch, Link, Globe } from "react-feather"
+import { useState, useEffect, useRef } from "react"
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
 import toast from "react-hot-toast"
+import { Globe } from "react-feather";
+import PropTypes from 'prop-types';
 
-const Header = (profile, profilePicture) => {
+const Header = ({ profile }) => {
     // Use States
     const [loading, setLoading] = useState(false)
     
@@ -37,37 +37,35 @@ const Header = (profile, profilePicture) => {
     const iconMapping = {
         facebook: <FaFacebook className="text-blue-600" size={32} />,
         instagram: <FaInstagram className="text-pink-600" size={32} />,
-        twitter: <FaTwitter className="text-blue-400" size={32} />, // Change to X twtiterelol
+        twitter: <FaTwitter className="text-blue-400" size={32} />,
         linkedin: <FaLinkedin className="text-blue-700" size={32} />,
         youtube: <FaYoutube className="text-red-600" size={32} />,
         twitch: <FaTwitch className="text-purple-600" size={32} />,
-        other: <Globe className="text-black-600" />, // You can keep this as is or find a suitable icon
-        // Add more mappings as needed
+        other: <Globe className="text-black-600" />, // Ensure Globe is imported or replace accordingly
     };
 
     useEffect(() => {
-        const info = profile.id.profile
+        if (!profile) {
+            console.error('Profile data is missing.');
+            return;
+        }
 
-        console.log(info)
+        setFirstName(profile.firstName || "");
+        setLastName(profile.lastName || "");
+        setPhoneNumber(profile.phoneNumber || "");
+        setEmail(profile.email || "");
+        setCompanyAddress(profile.companyAddress || "");
+        setPosition(profile.position || "");
+        setCompany(profile.company || "");
+        setAbout(profile.about || "");
 
-        setFirstName(info.firstName);
-        setLastName(info.lastName);
-        setPhoneNumber(info.phoneNumber);
-        setEmail(info.email);
-        setCompanyAddress(info.companyAddress);
-        setPosition(info.position);
-        setCompany(info.company);
-        setAbout(info.about);
+        setHeaderColour(profile?.colours?.[0]?.primaryColour || "#FFFFFF");
+        setCardColour(profile?.colours?.[0]?.cardColour || "#FFFFFF");
 
-        setHeaderColour(info?.colours?.[0]?.primaryColour)
-        setCardColour(info?.colours?.[0]?.cardColour)
-
-        const socialsArray = info?.socialMedia || [];
+        const socialsArray = profile?.socialMedia || [];
         
-        setProfilePictureLink(info.url);
-        
-        console.log(profilePictureLink);
-        
+        setProfilePictureLink(profile.url || "");
+
         let newSocialLinks = {};
         socialsArray.forEach(social => {
             for (let key in social) {
@@ -87,7 +85,7 @@ const Header = (profile, profilePicture) => {
             const aboutHeight = aboutRef.current.offsetHeight;
             setIsMultiLine(aboutHeight > lineHeight);
         }
-    })
+    }, [about]); // Add dependency to prevent continuous execution
 
     const createVCard = () => {
         const vCardData = [
@@ -124,7 +122,7 @@ const Header = (profile, profilePicture) => {
       e.preventDefault();
       setLoading(true);
 
-      const id = profile.id.profile._id
+      const id = profile._id // Adjust based on actual ID field
 
       try {
         const response = await fetch(`https://api.xclusivetouch.ca/api/exchangeContact/${id}`, {
@@ -145,7 +143,7 @@ const Header = (profile, profilePicture) => {
         if (!data.error) {
           toast.success('Contact exchanged successfully')
         } else {
-          toast.error('Contact exchange failed' + data.error)
+          toast.error('Contact exchange failed: ' + data.error)
         }
 
         setTimeout(() => {
@@ -156,6 +154,7 @@ const Header = (profile, profilePicture) => {
         setShowModal(false);
       } catch (error) {
         console.error('Error:', error);
+        toast.error('An unexpected error occurred.');
       } finally {
         setLoading(false)
       }
@@ -176,7 +175,7 @@ const Header = (profile, profilePicture) => {
               <Image
                 src={profilePictureLink}
                 alt="Profile"
-                layout="fill"
+                fill
                 style={{ objectFit: 'cover' }}
               />
             </div>
@@ -223,14 +222,16 @@ const Header = (profile, profilePicture) => {
               </div>
             )}
         
-          <div>
-              <p className="text-2xl font-bold mb-3">About</p>
-              <div className={`relative ${isExpanded ? '' : 'line-clamp-2'}`}>
-                {about}
-              </div>
-              <button onClick={toggleExpand} className="text-gold mt-2">
-                {isExpanded ? 'Show Less' : 'Show More'}
-              </button>
+            <div>
+                <p className="text-2xl font-bold mb-3">About</p>
+                <div className={`relative ${isExpanded ? '' : 'line-clamp-2'}`} ref={aboutRef}>
+                  {about}
+                </div>
+                {isMultiLine && (
+                    <button onClick={toggleExpand} className="text-gold mt-2">
+                        {isExpanded ? 'Show Less' : 'Show More'}
+                    </button>
+                )}
             </div>
           </div>
         
@@ -238,7 +239,7 @@ const Header = (profile, profilePicture) => {
             <p className="text-2xl font-bold mb-3">Social Media Links</p>
             <div className="flex space-x-4 overflow-x-auto">
               {Object.entries(socialLinks).map(([name, link]) => (
-                <div key={name} className="w-16 h-16 bg-gray-200 rounded-2xl flex-none items-center justify-center">
+                <div key={name} className="w-16 h-16 bg-gray-200 rounded-2xl flex items-center justify-center">
                   <a href={link.startsWith('http://') || link.startsWith('https://') ? link : `http://${link}`} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
                     {iconMapping[name.toLowerCase()] || name}
                   </a>
@@ -249,7 +250,7 @@ const Header = (profile, profilePicture) => {
 
           {showModal && (
             <div id='modal-background' className="fixed inset-0 flex items-end justify-center bg-black bg-opacity-50">
-              <div className='bg-white w-full md:1/2 p-6 rounded-t-lg'>
+              <div className='bg-white w-full md:w-1/2 p-6 rounded-t-lg'>
                 <h2 className='text-xl font-bold mb-4'>Exchange Contact</h2>
                   <form onSubmit={handleSubmit} className='space-y-4'>
                     <div>
@@ -270,7 +271,7 @@ const Header = (profile, profilePicture) => {
                         name='email'
                         value={formData.email}
                         onChange={handleInputChange}
-                        className='mt-1 block w-full border border-gray-300 ronded-md shadow-sm p-2'
+                        className='mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2' // Fixed typo: 'ronded-md' to 'rounded-md'
                         required
                       />
                     </div>
@@ -292,10 +293,32 @@ const Header = (profile, profilePicture) => {
                   </form>
               </div>
             </div>
-            
           )}
         </div>
-      );
+    );
+
 }
+
+Header.propTypes = {
+  profile: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    phoneNumber: PropTypes.string,
+    email: PropTypes.string,
+    companyAddress: PropTypes.string,
+    position: PropTypes.string,
+    company: PropTypes.string,
+    about: PropTypes.string,
+    colours: PropTypes.arrayOf(
+      PropTypes.shape({
+        primaryColour: PropTypes.string,
+        cardColour: PropTypes.string,
+      })
+    ),
+    socialMedia: PropTypes.arrayOf(PropTypes.object),
+    url: PropTypes.string,
+  }).isRequired,
+  profilePicture: PropTypes.string,
+};
 
 export default Header

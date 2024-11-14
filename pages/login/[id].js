@@ -7,8 +7,6 @@ import { useRouter } from 'next/router';
 import jwt from 'jsonwebtoken';
 import {toast, Toaster} from 'react-hot-toast';
 import { RotatingLines } from 'react-loader-spinner';
-
-import Body from "@/components/profile/Body";
 import Create from "@/components/profile/Create";
 import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
 import MultiStepForm from "@/components/Onboarding";

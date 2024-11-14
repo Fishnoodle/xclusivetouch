@@ -1,51 +1,19 @@
-import Body from "@/components/profile/Body";
-import { useEffect, useState } from "react";
-import { Inter } from "next/font/google";
+import Header from "@/components/profile/Header";
 import Login from "../login";
 import { RotatingLines } from 'react-loader-spinner';
+import Footer from "@/components/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+// Cache configuration
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 
-export default function Profile({ id, initialProfile, initialProfilePicture }) {
-    // UseStates
-    const [profile, setProfile] = useState(initialProfile);
-    const [profilePicture, setProfilePicture] = useState(initialProfilePicture);
-    const [loading, setLoading] = useState(!initialProfile);
+// Initialize global cache if it doesn't exist
+if (!global.profileCache) {
+    global.profileCache = {};
+}
 
-    useEffect(() => {
-        if (!initialProfile && id) {
-            fetchUser();
-        }
-    }, [id, initialProfile]);
-
-    async function fetchUser() {
-        try {
-            console.log('About to make fetch request');
-            const req = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`);
-            console.log('Fetch request made');
-
-            if (req.ok) {
-                console.log('Response OK');
-            } else {
-                console.log('Response not OK', req.status);
-            }
-
-            const data = await req.json();
-            console.log('Response data:', data);
-
-            if (data !== null) {
-                setProfile({
-                    ...data.data.profile[0],
-                    url: data.url
-                });
-                setProfilePicture(data.url);
-            }
-        } catch (err) {
-            console.log('Error caught:', err);
-        } finally {
-            setLoading(false);
-        }
-    }
+export default function Profile({ id, initialProfile }) {
+    const profile = initialProfile;
+    const loading = !profile;
 
     if (loading) {
         return (
@@ -70,46 +38,83 @@ export default function Profile({ id, initialProfile, initialProfilePicture }) {
     }
 
     return (
-        <>
-            {profilePicture !== "" && <Body profile={profile} profilePicture={profilePicture} />}
-        </>
+        <div>
+            <Header profile={profile} />
+            <div className="flex-grow my-8"></div>
+            <Footer />
+        </div>
     );
 }
 
 export async function getServerSideProps(context) {
     const { id } = context.params;
+    const now = Date.now();
+
+    // Access the global cache
+    const cachedData = global.profileCache[id];
+
+    if (cachedData && (now - cachedData.timestamp) < CACHE_DURATION) {
+        if (process.env.NODE_ENV === 'development') {
+            console.log(`Serving profile ${id} from global cache.`);
+        }
+        return {
+            props: {
+                id,
+                initialProfile: cachedData.profile,
+            }
+        };
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+        console.log(`Fetching profile from API for ID: ${id}`);
+    }
 
     try {
-        const req = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`);
-        const data = await req.json();
+        const response = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`);
+        const data = await response.json();
 
-        if (data !== null) {
+        if (data && data.data && data.data.profile && data.data.profile.length > 0) {
+            const profileData = data.data.profile[0];
+            const profile = {
+                ...profileData,
+                url: data.url || '',
+            };
+
+            // Store in global cache
+            global.profileCache[id] = {
+                profile,
+                timestamp: now,
+            };
+
+            if (process.env.NODE_ENV === 'development') {
+                console.log(`Profile data cached in global cache for ID: ${id}`);
+            }
+
             return {
                 props: {
                     id,
-                    initialProfile: {
-                        ...data.data.profile[0],
-                        url: data.url
-                    },
-                    initialProfilePicture: data.url
+                    initialProfile: profile,
                 }
             };
         } else {
+            if (process.env.NODE_ENV === 'development') {
+                console.log('No profile data found.');
+            }
             return {
                 props: {
                     id,
                     initialProfile: null,
-                    initialProfilePicture: ''
                 }
             };
         }
     } catch (err) {
-        console.log('Error caught:', err);
+        if (process.env.NODE_ENV === 'development') {
+            console.log('Error fetching profile:', err);
+        }
         return {
             props: {
                 id,
                 initialProfile: null,
-                initialProfilePicture: ''
             }
         };
     }
