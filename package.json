@@ -37,6 +37,7 @@
     "toast": "^0.5.4"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.8.1",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
