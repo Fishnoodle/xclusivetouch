@@ -4,6 +4,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@material-tailwind/react";
 import { Toaster } from "react-hot-toast";
+import { Inter } from 'next/font/google';
+
+// Initialize the Inter font with desired configurations
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -12,7 +19,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <ThemeProvider>
-      <div className="flex flex-col min-h-screen">
+      <div className={`${inter.variable} flex flex-col min-h-screen`}>
         {(!isProfilePage && !isOnboarding) && <Navbar />}
         <main className="flex-grow">
           <Component {...pageProps} />

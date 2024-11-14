@@ -1,74 +1,45 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
-import Link from 'next/link'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import jwt from 'jsonwebtoken';
-import {toast, Toaster} from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
 import { RotatingLines } from 'react-loader-spinner';
 import Create from "@/components/profile/Create";
 import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
 import MultiStepForm from "@/components/Onboarding";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ["latin"] });
+// Initialize the Inter font with desired configurations
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
 
-export default function Profile({ id }) {
+export default function Profile({ profileData, id }) {
+  const router = useRouter();
+  const isProfilePage = router.pathname.startsWith('/profile');
+  const isOnboarding = router.pathname.startsWith('/login/');
+
   // UseStates
-  const [profile, setProfile] = useState(false);
-  const [username, setUsername] = useState(false);
+  const [profile, setProfile] = useState(profileData);
+  const [username, setUsername] = useState(profileData?.username || "");
   const [editMode, setEditMode] = useState(false);
-  
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!profileData);
 
   const handleClick = () => {   
-    window.location.href = `/profile/${username}`
-  }
+    window.location.href = `/profile/${username}`;
+  };
 
   const handleEditClick = (event) => {
     event.preventDefault();
     setEditMode(true);
-  }
+  };
 
-  useEffect(() => {
-    if (id) {
-      console.log(id);
-
-      const token = localStorage.getItem("token");
-      console.log('Token:', token);
-
-      const fetchUser = async () => {
-        try {
-          console.log('About to make fetch request');
-          const req = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`)
-          console.log('Fetch request made');
-
-          if (req.ok) {
-            console.log('Response OK');
-          } else {
-            console.log('Response not OK', req.status);
-          }
-
-          const data = await req.json()
-          console.log('Response data:', data);
-
-          if (data.data !== null){
-            setUsername(data.data.username)
-            setProfile(data.data.profile[0])
-          }
-        } catch (err) {
-          console.log('Error caught:', err);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchUser();
-    }
-  }, [id]);
-  
+  // If profileData is not provided, handle loading state
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -100,7 +71,6 @@ export default function Profile({ id }) {
       <Navbar />
       <Toaster />
       <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 py-4">
-
         <Card className='mt-6 w-96 mb-6'>
           <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
             <Image 
@@ -119,11 +89,11 @@ export default function Profile({ id }) {
             </Typography>
           </CardBody>
           <CardFooter className='pt-0'>
-            <a href={`/profile/${username}`} target='_blank'>
-              <Button>
+            <Link href={`/profile/${username}`} passHref>
+              <Button component="a" target='_blank'>
                 Public Profile
               </Button>
-            </a>
+            </Link>
           </CardFooter>
         </Card>
 
@@ -145,24 +115,42 @@ export default function Profile({ id }) {
             </Typography>
           </CardBody>
           <CardFooter className='pt-0'>
-            <a href="#" target='_blank' onClick={handleEditClick}>
-              <Button>
-                Edit Profile
-              </Button>
-            </a>
+            <Button onClick={handleEditClick}>
+              Edit Profile
+            </Button>
           </CardFooter>
         </Card>
-
       </div>
       <Footer />
     </>
-  )
+  );
 }
 
-export async function getServerSideProps(context) {
-  const { id } = context.params;
+// Switch to getServerSideProps instead of getStaticProps/getStaticPaths
+export async function getServerSideProps({ params }) {
+  const { id } = params;
 
-  return {
-    props: { id }, // will be passed to the page component as props
-  };
+  try {
+    const res = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
+    
+    if (!res.ok) {
+      return { notFound: true };
+    }
+
+    const data = await res.json();
+
+    if (!data.data || !data.data.profile || data.data.profile.length === 0) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        profile: data.data.profile[0],
+        id,
+      }
+    };
+  } catch (error) {
+    console.error(`Error fetching profile data for id ${id}:`, error);
+    return { notFound: true };
+  }
 }

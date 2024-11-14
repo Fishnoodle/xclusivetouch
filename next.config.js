@@ -11,8 +11,8 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-  },
-  output: 'export'
+    unoptimized: true, // Disable Next.js Image Optimization
+  }
   // ...other configurations
 };
 
