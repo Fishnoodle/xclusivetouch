@@ -1,20 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true, // Enable React Strict Mode
-  compress: true,
+  reactStrictMode: true,
   swcMinify: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'xclusivetouch-s3.s3.us-east-2.amazonaws.com',
-        port: '',
-        pathname: '/**',
-      },
-    ],
-    unoptimized: true, // Disable Next.js Image Optimization
-  }
-  // ...other configurations
-};
+    domains: ['api.xclusivetouch.ca'],
+    unoptimized: true
+  },
+  webpack: (config) => {
+    // Attempt to resolve module resolution issues
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
+    };
+    return config;
+  },
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
