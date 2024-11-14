@@ -38,35 +38,36 @@ export default function Profile({ id }) {
 
       const token = localStorage.getItem("token");
       console.log('Token:', token);
+
+      const fetchUser = async () => {
+        try {
+          console.log('About to make fetch request');
+          const req = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`)
+          console.log('Fetch request made');
+
+          if (req.ok) {
+            console.log('Response OK');
+          } else {
+            console.log('Response not OK', req.status);
+          }
+
+          const data = await req.json()
+          console.log('Response data:', data);
+
+          if (data.data !== null){
+            setUsername(data.data.username)
+            setProfile(data.data.profile[0])
+          }
+        } catch (err) {
+          console.log('Error caught:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
       fetchUser();
     }
-  }, [id])
-
-  async function fetchUser() {
-    try {
-      console.log('About to make fetch request');
-      const req = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`)
-      console.log('Fetch request made');
-
-      if (req.ok) {
-        console.log('Response OK');
-      } else {
-        console.log('Response not OK', req.status);
-      }
-
-      const data = await req.json()
-      console.log('Response data:', data);
-
-      if (data.data !== null){
-        setUsername(data.data.username)
-        setProfile(data.data.profile[0])
-      }
-    } catch (err) {
-      console.log('Error caught:', err);
-    } finally {
-      setLoading(false);
-    }
-  }
+  }, [id]);
   
   if (loading) {
     return (

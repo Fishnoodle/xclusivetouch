@@ -1,4 +1,4 @@
-import Header from "@/components/profile/Header"; // Import the Header component
+import Header from "@/components/profile/Header";
 import Login from "../login";
 import { RotatingLines } from 'react-loader-spinner';
 import Footer from "@/components/Footer";
