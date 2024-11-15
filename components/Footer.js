@@ -5,7 +5,7 @@ import { FaTiktok } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import Image from 'next/image'
 
-function Footer() {
+export default function Footer() {
 	return (
 		<footer className="">
 			<div className="bg-[#071013] h-1/2 w-full flex md:flex-row flex-col sm:content-center justify-around md:items-start items-center p-20 rounded-t-3xl">
@@ -16,7 +16,7 @@ function Footer() {
 							width={200}
 							height={200}
 							alt='Picture of XclusiveTouch Logo'
-         				 />
+						/>
 						<div className="flex items-center justify-center gap-8 md:flex md:gap-6 md:pb-5">
 							<Link href='https://www.instagram.com/xclusivetouch23?igsh=MTl6M29ncTdsamxsNA==' target="_blank">
 							<FaInstagram className="text-2xl cursor-pointer text-white hover:text-yellow-600" />
@@ -80,5 +80,3 @@ function Footer() {
 		</footer>
 	);
 }
-
-export default Footer;

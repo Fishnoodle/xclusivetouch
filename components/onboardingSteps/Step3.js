@@ -1,5 +1,16 @@
 import React from 'react';
-import { Select, MenuItem, TextField, Button, IconButton, FormControl, Card, CardContent } from '@mui/material';
+import PropTypes from 'prop-types';
+
+// Mui Imports 
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+
 import { Delete, DragIndicator } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
@@ -84,6 +95,22 @@ const Step3 = ({ formData, setFormData, handlePlatformChange, handleLinkChange, 
             </Button>
         </div>
     );
+};
+Step3.propTypes = {
+    formData: PropTypes.shape({
+        socialMedia: PropTypes.arrayOf(
+            PropTypes.shape({
+                platform: PropTypes.string,
+                link: PropTypes.string
+            })
+        )
+    }).isRequired,
+    setFormData: PropTypes.func.isRequired,
+    handlePlatformChange: PropTypes.func.isRequired,
+    handleLinkChange: PropTypes.func.isRequired,
+    handleAddSocialMedia: PropTypes.func.isRequired,
+    handleRemoveSocialMedia: PropTypes.func.isRequired,
+    showErrors: PropTypes.bool.isRequired
 };
 
 export default Step3;

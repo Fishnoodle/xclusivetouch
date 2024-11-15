@@ -5,7 +5,7 @@ import { FiMenu } from "react-icons/fi";
 import { AiOutlineClose } from 'react-icons/ai';
 import Image from 'next/image';
 
-const Navbar = () => {
+export default function Navbar() {
 
   const [nav, setNav] = useState(false);
 
@@ -104,6 +104,4 @@ const Navbar = () => {
       </div>
     </div>
   );
-};
-
-export default Navbar;
+}

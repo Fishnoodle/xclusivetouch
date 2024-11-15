@@ -1,6 +1,7 @@
-import { Button } from "@material-tailwind/react";
+import React from "react";
+import Button from "@material-tailwind/react/components/Button"
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";

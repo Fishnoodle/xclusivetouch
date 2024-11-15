@@ -1,4 +1,4 @@
-import { Button } from "@material-tailwind/react"
+import Button from "@material-tailwind/react/components/Button"
 import Image from "next/image"
 import { useState, useEffect, useRef } from "react"
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
@@ -170,7 +170,13 @@ const Header = ({ profile, profilePictureUrl }) => {
                 src={profilePictureLink}
                 alt="Profile"
                 fill
-                style={{ objectFit: 'cover' }}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority={true}
+                className='object-cover'
+                onError={(e) => {
+                  console.error('Error loading image:', e);
+                }}
+               // style={{ objectFit: 'cover' }}
               />
             </div>
         

@@ -20,9 +20,8 @@
   },
   "plugins": ["react"],
   "rules": {
-    "react/react-in-jsx-scope": "off",  // Disable since React 17+ doesn't require it
-    "react/prop-types": "off"          // Disable prop-types in _app.js
-    // Add or customize other rules as needed
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-page-custom-font": "off"
   },
   "settings": {
     "react": {

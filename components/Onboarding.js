@@ -1,4 +1,5 @@
-import { Button } from "@material-tailwind/react";
+import React from "react";
+import Button from "@material-tailwind/react/components/Button"
 import toast, { Toaster } from "react-hot-toast";
 import Step1 from "./onboardingSteps/Step1";
 import { useState } from "react";
