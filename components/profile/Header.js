@@ -1,6 +1,8 @@
+import React from "react";
 import Button from "@material-tailwind/react/components/Button"
 import Image from "next/image"
 import { useState, useEffect, useRef } from "react"
+import PropTypes from 'prop-types';
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
 import toast from "react-hot-toast"
 import { Globe } from "react-feather";
@@ -71,7 +73,19 @@ const Header = ({ profile, profilePictureUrl }) => {
         
         setSocialLinks(newSocialLinks);
       }
-    }, [profile, profilePictureUrl]);
+    }, [
+      profile.firstName,
+      profile.lastName,
+      profile.phoneNumber,
+      profile.email,
+      profile.companyAddress,
+      profile.position,
+      profile.company,
+      profile.about,
+      profile.colours,
+      profile.socialMedia,
+      profilePictureUrl
+    ]);
 
     useEffect(() => {
         if (aboutRef.current) {
@@ -154,11 +168,11 @@ const Header = ({ profile, profilePictureUrl }) => {
       }
     };
 
-    const handleCloseModal = (e) => {
-      if (e.target.id === 'modal-background') {
-        setShowModal(false);
-      }
-    }
+    // const handleCloseModal = (e) => {
+    //   if (e.target.id === 'modal-background') {
+    //     setShowModal(false);
+    //   }
+    // }
 
     return (
         <div className="overflow-hidden relative">
@@ -298,5 +312,9 @@ const Header = ({ profile, profilePictureUrl }) => {
     );
 
 }
+Header.propTypes = {
+  profile: PropTypes.object.isRequired,
+  profilePictureUrl: PropTypes.string.isRequired,
+};
 
 export default Header

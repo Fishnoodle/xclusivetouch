@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
 
 // Import layout components normally
@@ -23,8 +24,10 @@ function Profile({ profile, url }) {
     </div>
   );
 }
-
-export default memo(Profile);
+Profile.propTypes = {
+  profile: PropTypes.object,
+  url: PropTypes.string,
+};
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
@@ -54,3 +57,5 @@ export async function getServerSideProps(context) {
     return { props: { profile: null, url: null } };
   }
 }
+
+export default Profile;

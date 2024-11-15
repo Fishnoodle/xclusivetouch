@@ -8,8 +8,7 @@
     "next",
     "next/core-web-vitals",
     "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@next/next/recommended"
+    "plugin:react/recommended"
   ],
   "parserOptions": {
     "ecmaFeatures": {

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Input, Button, Typography, Textarea } from '@material-tailwind/react';
 import { Select, MenuItem, TextField } from '@mui/material';
+import PropTypes from 'prop-types';
 
 // Disabled LinkedIn for now - until we can figure out how to save LinkedIn key
 const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'Youtube', 'Twitch', 'Other']
 
-const Create = ({ id = null, profile = null }) => {
+const Create = ({ id, profile }) => {
     // useStates
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -359,6 +360,26 @@ const Create = ({ id = null, profile = null }) => {
             </Card>
         </div>
     );
+};
+
+Create.propTypes = {
+    id: PropTypes.string,
+    profile: PropTypes.shape({
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+        phoneNumber: PropTypes.string,
+        email: PropTypes.string,
+        companyAddress: PropTypes.string,
+        position: PropTypes.string,
+        company: PropTypes.string,
+        about: PropTypes.string,
+        colours: PropTypes.arrayOf(PropTypes.shape({
+            primaryColour: PropTypes.string,
+            cardColour: PropTypes.string,
+            profilePhoto: PropTypes.string,
+        })),
+        socialMedia: PropTypes.arrayOf(PropTypes.object),
+    }),
 };
 
 export default Create;
