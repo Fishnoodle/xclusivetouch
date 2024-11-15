@@ -75,7 +75,6 @@ export default function Profile() {
         <div>
             <Header profile={profile} profilePictureUrl={url} />
             <div className="flex-grow my-8"></div>
-            <Footer />
         </div>
     );
 }

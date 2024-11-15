@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router';
 import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@material-tailwind/react";
 import { Toaster } from "react-hot-toast";
 import { Inter } from 'next/font/google';
+import { useRouter } from 'next/router';
 
 // Initialize the Inter font with desired configurations
 const inter = Inter({

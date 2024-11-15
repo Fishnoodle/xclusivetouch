@@ -8,7 +8,6 @@ import { Globe } from "react-feather";
 const Header = ({ profile, profilePictureUrl }) => {
     // Use States
     const [loading, setLoading] = useState(false)
-    
     const [headerColour, setHeaderColour] = useState("")
     const [cardColour, setCardColour] = useState("")
     const [firstName, setFirstName] = useState("")
@@ -44,13 +43,7 @@ const Header = ({ profile, profilePictureUrl }) => {
     };
 
     useEffect(() => {
-        if (!profile) {
-            console.error('Profile data is missing.');
-            return;
-        }
-
-        console.log(profile);
-
+      if (profile) {
         setFirstName(profile.firstName || "");
         setLastName(profile.lastName || "");
         setPhoneNumber(profile.phoneNumber || "");
@@ -77,8 +70,8 @@ const Header = ({ profile, profilePictureUrl }) => {
         });
         
         setSocialLinks(newSocialLinks);
-
-    }, [profile]);
+      }
+    }, [profile, profilePictureUrl]);
 
     useEffect(() => {
         if (aboutRef.current) {
