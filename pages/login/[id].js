@@ -21,7 +21,7 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-export default function Profile() {
+export default function LoginProfile() {
   const router = useRouter();
   const { id } = router.query;
 
@@ -69,7 +69,7 @@ export default function Profile() {
     };
 
     fetchProfile();
-  }, [id]);
+  }, []);
 
   const handleClick = () => {   
     window.location.href = `/profile/${username}`;
