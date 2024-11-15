@@ -1,12 +1,10 @@
 import Head from "next/head";
-import React, { useState } from 'react';
+import React from 'react';
 
 // Components
 import HowItWorks from '@/components/HowItWorks';
 import Hero from "@/components/Hero";
-import Footer from "@/components/Footer";
 import { Reviews } from "@/components/Reviews";
-import BentoBox from "@/components/BentoBox";
 
 import FAQ from "@/components/FAQ";
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select, MenuItem, FormControl, InputLabel, TextField, Typography } from '@mui/material';
+import { Select, MenuItem, FormControl, TextField, Typography } from '@mui/material';
 
 const Step2 = ({ formData, handleChange, handleFileChange, showErrors }) => {
     const [isFocused, setIsFocused] = useState({

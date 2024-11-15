@@ -1,80 +1,63 @@
-// pages/profile/[id].js
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import Header from "@/components/profile/Header";
-import Login from "../login";
-import { RotatingLines } from 'react-loader-spinner';
-import Footer from "@/components/Footer";
+import dynamic from 'next/dynamic';
 
-export default function Profile() {
-    const router = useRouter();
-    const { id } = router.query;
+// Dynamically import components
+const Header = dynamic(() => import('@/components/profile/Header'), {
+  loading: () => <p>Loading Header...</p>,
+});
+const Login = dynamic(() => import('../login'), {
+  loading: () => <p>Loading Login...</p>,
+});
 
-    const [profile, setProfile] = useState(null);
-    const [url, setUrl] = useState(null);
-    const [loading, setLoading] = useState(true);
+export default function Profile({ profile, url }) {
+  const router = useRouter();
+  const { id } = router.query;
 
-    useEffect(() => {
-        if (!id) return;
+  // If using getServerSideProps, profile and url are passed as props
+  // Otherwise, fetch them client-side as needed
 
-        const fetchProfile = async () => {
-            try {
-                const res = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`);
+  // If you opt for client-side fetching, ensure to memoize functions and handle loading efficiently
 
-                if (!res.ok) {
-                    console.error(`Failed to fetch profile: ${res.status} ${res.statusText}`);
-                    setProfile(null);
-                    setLoading(false);
-                    return;
-                }
+  if (!profile) {
+    return <Login />;
+  }
 
-                const data = await res.json();
+  return (
+    <div>
+      <Header profile={profile} profilePictureUrl={url} />
+      <div className="flex-grow my-8"></div>
+    </div>
+  );
+}
 
-                if (!data.data || !data.data.profile || data.data.profile.length === 0) {
-                    console.error('Invalid profile data structure:', data);
-                    setProfile(null);
-                    setLoading(false);
-                    return;
-                }
+// Example using getServerSideProps for server-side data fetching
+export async function getServerSideProps(context) {
+  const { id } = context.params;
 
-                setUrl(data.url)
-                setProfile(data.data.profile[0]);
-            } catch (error) {
-                console.error(`Error fetching profile data for id ${id}:`, error);
-                setProfile(null);
-            } finally {
-                setLoading(false);
-            }
-        };
+  try {
+    const res = await fetch(`https://api.xclusivetouch.ca/api/publicProfile/${id}`);
 
-        fetchProfile();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <RotatingLines
-                    visible={true}
-                    height="96"
-                    width="96"
-                    strokeColor="#D4AF37"
-                    strokeWidth="5"
-                    animationDuration="0.75"
-                    ariaLabel="rotating-lines-loading"
-                />
-            </div>
-        );
+    if (!res.ok) {
+      console.error(`Failed to fetch profile: ${res.status} ${res.statusText}`);
+      return { props: { profile: null, url: null } };
     }
 
-    if (!profile) {
-        return <Login />;
+    const data = await res.json();
+
+    if (!data.data || !data.data.profile || data.data.profile.length === 0) {
+      console.error('Invalid profile data structure:', data);
+      return { props: { profile: null, url: null } };
     }
 
-    return (
-        <div>
-            <Header profile={profile} profilePictureUrl={url} />
-            <div className="flex-grow my-8"></div>
-        </div>
-    );
+    return {
+      props: {
+        profile: data.data.profile[0],
+        url: data.url || null,
+      },
+    };
+  } catch (error) {
+    console.error(`Error fetching profile data for id ${id}:`, error);
+    return { props: { profile: null, url: null } };
+  }
 }

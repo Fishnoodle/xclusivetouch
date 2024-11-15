@@ -2,7 +2,6 @@ import Head from "next/head";
 import React from 'react';
 
 // Components
-import Footer from "@/components/Footer";
 import FAQ from '@/components/FAQ';
 import HowItWorksPage from "@/components/HowItWorksPage";
 

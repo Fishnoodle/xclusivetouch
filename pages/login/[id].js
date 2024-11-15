@@ -1,34 +1,39 @@
-// pages/profile/[id].js
-
-import Head from "next/head";
 import Link from 'next/link';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import jwt from 'jsonwebtoken';
-import { toast, Toaster } from 'react-hot-toast';
-import { RotatingLines } from 'react-loader-spinner';
-import Create from "@/components/profile/Create";
-import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
-import MultiStepForm from "@/components/Onboarding";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { Inter } from 'next/font/google';
+import dynamic from 'next/dynamic';
 
-// Initialize the Inter font with desired configurations
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
+// Dynamic Imports
+const Toaster = dynamic(() => import('react-hot-toast').then(mod => mod.Toaster), {
+  ssr: false,
 });
+const RotatingLines = dynamic(() => import('react-loader-spinner').then(mod => mod.RotatingLines), {
+  ssr: false,
+});
+const Create = dynamic(() => import('@/components/profile/Create'), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const MultiStepForm = dynamic(() => import('@/components/Onboarding'), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
+const Navbar = dynamic(() => import('@/components/Navbar'), {
+  loading: () => <p>Loading Navbar...</p>,
+});
+const Footer = dynamic(() => import('@/components/Footer'), {
+  loading: () => <p>Loading Footer...</p>,
+});
+
+// Import only necessary components from @material-tailwind/react
+import { Button, Card, CardBody, CardFooter, CardHeader, Typography } from '@mui/material';
 
 export default function LoginProfile() {
   const router = useRouter();
   const { id } = router.query;
 
-  const isProfilePage = router.pathname.startsWith('/profile');
-  const isOnboarding = router.pathname.startsWith('/login/');
-
-  // UseStates
+  // State hooks
   const [profile, setProfile] = useState(null);
   const [username, setUsername] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -42,7 +47,6 @@ export default function LoginProfile() {
         const res = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
 
         if (!res.ok) {
-          // Handle non-OK responses
           console.error(`Failed to fetch profile: ${res.status} ${res.statusText}`);
           setProfile(null);
           setLoading(false);
@@ -58,8 +62,8 @@ export default function LoginProfile() {
           return;
         }
 
-        setProfile(data.data.profile[0]); // Ensure this matches your API's response structure
-        setUsername(data.data.username);
+        setProfile(data.data.profile[0]); // Adjust as per your API's response structure
+        setUsername(data.data.profile[0].username); // Ensure 'username' exists
       } catch (error) {
         console.error(`Error fetching profile data for id ${id}:`, error);
         setProfile(null);
@@ -69,18 +73,14 @@ export default function LoginProfile() {
     };
 
     fetchProfile();
-  }, []);
-
-  const handleClick = () => {   
-    window.location.href = `/profile/${username}`;
-  };
+  }, [id]);
 
   const handleEditClick = (event) => {
     event.preventDefault();
     setEditMode(true);
   };
 
-  // If profileData is not provided, handle loading state
+  // Loading state
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -99,19 +99,23 @@ export default function LoginProfile() {
     );
   }
 
+  // No profile found
   if (!profile) {
     return <MultiStepForm />;
   }
 
+  // Edit mode
   if (editMode) {
-    return <Create {...(editMode ? { id, profile } : {})} />;
+    return <Create id={id} profile={profile} />;
   }
 
+  // Main Content
   return (
     <>
       <Navbar />
       <Toaster />
       <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 py-4">
+        {/* Public Profile Card */}
         <Card className='mt-6 w-96 mb-6'>
           <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
             <Image 
@@ -138,6 +142,7 @@ export default function LoginProfile() {
           </CardFooter>
         </Card>
 
+        {/* Edit Profile Card */}
         <Card className='mt-6 w-96 mb-6'>
           <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
             <Image 

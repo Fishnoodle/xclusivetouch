@@ -1,6 +1,32 @@
 {
-  "plugins": ["import"],
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@next/next/recommended"
+  ],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
   "rules": {
-    "import/no-cycle": ["error", { "maxDepth": 1 }]
+    "react/react-in-jsx-scope": "off",  // Disable since React 17+ doesn't require it
+    "react/prop-types": "off"          // Disable prop-types in _app.js
+    // Add or customize other rules as needed
+  },
+  "settings": {
+    "react": {
+      "version": "detect"  // Automatically detect the React version
+    }
   }
 }

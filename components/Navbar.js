@@ -1,17 +1,9 @@
-import React, { useState } from "react";
-import Link from 'next/link'
+
+import React, { useState } from 'react';
+import Link from 'next/link';
 import { FiMenu } from "react-icons/fi";
-import { AiOutlineClose, AiOutlineMail, AiOutlineMenu } from 'react-icons/ai';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Image from 'next/image'
-import InputAdornment from '@mui/material/InputAdornment';
-import EmailIcon from '@mui/icons-material/Email';
+import { AiOutlineClose } from 'react-icons/ai';
+import Image from 'next/image';
 
 const Navbar = () => {
 
