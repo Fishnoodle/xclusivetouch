@@ -1,7 +1,9 @@
+// pages/profile/[id].js
+
 import Head from "next/head";
 import Link from 'next/link';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import jwt from 'jsonwebtoken';
 import { toast, Toaster } from 'react-hot-toast';
@@ -19,16 +21,55 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-export default function Profile({ profileData, id }) {
+export default function Profile() {
   const router = useRouter();
+  const { id } = router.query;
+
   const isProfilePage = router.pathname.startsWith('/profile');
   const isOnboarding = router.pathname.startsWith('/login/');
 
   // UseStates
-  const [profile, setProfile] = useState(profileData);
-  const [username, setUsername] = useState(profileData?.username || "");
+  const [profile, setProfile] = useState(null);
+  const [username, setUsername] = useState("");
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(!profileData);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return; // Wait for the id to be available
+
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
+
+        if (!res.ok) {
+          // Handle non-OK responses
+          console.error(`Failed to fetch profile: ${res.status} ${res.statusText}`);
+          setProfile(null);
+          setLoading(false);
+          return;
+        }
+
+        const data = await res.json();
+
+        if (!data.data || !data.data.profile || data.data.profile.length === 0) {
+          console.error('Invalid profile data structure:', data);
+          setProfile(null);
+          setLoading(false);
+          return;
+        }
+
+        setProfile(data.data.profile[0]); // Ensure this matches your API's response structure
+        setUsername(data.data.username);
+      } catch (error) {
+        console.error(`Error fetching profile data for id ${id}:`, error);
+        setProfile(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [id]);
 
   const handleClick = () => {   
     window.location.href = `/profile/${username}`;
@@ -124,33 +165,4 @@ export default function Profile({ profileData, id }) {
       <Footer />
     </>
   );
-}
-
-// Switch to getServerSideProps instead of getStaticProps/getStaticPaths
-export async function getServerSideProps({ params }) {
-  const { id } = params;
-
-  try {
-    const res = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
-    
-    if (!res.ok) {
-      return { notFound: true };
-    }
-
-    const data = await res.json();
-
-    if (!data.data || !data.data.profile || data.data.profile.length === 0) {
-      return { notFound: true };
-    }
-
-    return {
-      props: {
-        profile: data.data.profile[0],
-        id,
-      }
-    };
-  } catch (error) {
-    console.error(`Error fetching profile data for id ${id}:`, error);
-    return { notFound: true };
-  }
 }

@@ -4,9 +4,8 @@ import { useState, useEffect, useRef } from "react"
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
 import toast from "react-hot-toast"
 import { Globe } from "react-feather";
-import PropTypes from 'prop-types';
 
-const Header = ({ profile }) => {
+const Header = ({ profile, profilePictureUrl }) => {
     // Use States
     const [loading, setLoading] = useState(false)
     
@@ -50,6 +49,8 @@ const Header = ({ profile }) => {
             return;
         }
 
+        console.log(profile);
+
         setFirstName(profile.firstName || "");
         setLastName(profile.lastName || "");
         setPhoneNumber(profile.phoneNumber || "");
@@ -64,7 +65,7 @@ const Header = ({ profile }) => {
 
         const socialsArray = profile?.socialMedia || [];
         
-        setProfilePictureLink(profile.url || "");
+        setProfilePictureLink(profilePictureUrl || "");
 
         let newSocialLinks = {};
         socialsArray.forEach(social => {
@@ -298,27 +299,5 @@ const Header = ({ profile }) => {
     );
 
 }
-
-Header.propTypes = {
-  profile: PropTypes.shape({
-    firstName: PropTypes.string,
-    lastName: PropTypes.string,
-    phoneNumber: PropTypes.string,
-    email: PropTypes.string,
-    companyAddress: PropTypes.string,
-    position: PropTypes.string,
-    company: PropTypes.string,
-    about: PropTypes.string,
-    colours: PropTypes.arrayOf(
-      PropTypes.shape({
-        primaryColour: PropTypes.string,
-        cardColour: PropTypes.string,
-      })
-    ),
-    socialMedia: PropTypes.arrayOf(PropTypes.object),
-    url: PropTypes.string,
-  }).isRequired,
-  profilePicture: PropTypes.string,
-};
 
 export default Header
