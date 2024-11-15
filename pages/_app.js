@@ -1,8 +1,7 @@
 import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ThemeProvider } from "@material-tailwind/react";
-import { Toaster } from "react-hot-toast";
+//import { ThemeProvider } from "@material-tailwind/react";
 import { Inter } from 'next/font/google';
 import { useRouter } from 'next/router';
 
@@ -18,7 +17,6 @@ export default function App({ Component, pageProps }) {
   const isOnboarding = router.pathname.startsWith('/login/');
 
   return (
-    <ThemeProvider>
       <div className={`${inter.variable} flex flex-col min-h-screen`}>
         {(!isProfilePage && !isOnboarding) && <Navbar />}
         <main className="flex-grow">
@@ -26,7 +24,5 @@ export default function App({ Component, pageProps }) {
         </main>
         {(!isProfilePage && !isOnboarding) && <Footer />}
       </div>
-      <Toaster position="top-right" reverseOrder={false} />
-    </ThemeProvider>
   );
 }
