@@ -42,6 +42,7 @@ export async function getServerSideProps(context) {
 
     const data = await res.json();
     const profileData = data.data?.profile?.[0];
+    const profileUrl = data.url;
 
     if (!profileData) {
       return { props: { profile: null, url: null } };
@@ -50,7 +51,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         profile: profileData,
-        url: data.url || null,
+        url: profileUrl,
       },
     };
   } catch (error) {
