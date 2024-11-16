@@ -15,6 +15,7 @@ import dynamic from 'next/dynamic';
 // Import components normally for layout components
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Loader from '@/components/Loader';
 
 // Keep dynamic imports for heavy components
 const Toaster = dynamic(() => import('react-hot-toast').then(mod => mod.Toaster), {
@@ -24,11 +25,11 @@ const RotatingLines = dynamic(() => import('react-loader-spinner').then(mod => m
   ssr: false,
 });
 const Create = dynamic(() => import('@/components/profile/Create'), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
   ssr: false,
 });
 const MultiStepForm = dynamic(() => import('@/components/Onboarding'), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
   ssr: false,
 });
 

@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dynamic from 'next/dynamic';
+import Loader from '@/components/Loader';
 
 // Import layout components normally
 const Header = dynamic(() => import('@/components/profile/Header'), {
-  loading: () => <p>Loading Header...</p>,
+  loading: () => <Loader />,
   ssr: false
 });
 const Login = dynamic(() => import('@/components/LoginSection'), {
-  loading: () => <p>Loading Login...</p>,
+  loading: () => <Loader />,
   ssr: false
 });
 
