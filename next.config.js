@@ -13,6 +13,7 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+    unoptimized: true, // Disable image optimization
   },
   // Remove custom webpack configuration unless necessary
   // If you need it, ensure it's correctly set up without conflicting cacheGroups
