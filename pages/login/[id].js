@@ -150,8 +150,7 @@ function LoginProfile() {
         <Card className='mt-6 w-96 mb-6'>
           <CardHeader color='gray' className='relative h-56 flex justify-center items-center'>
             <Image 
-              src='/assets/hero_img.png'
-              width={250}
+              src='/assets/hero_img.png' //
               height={250}
               alt='Picture of XclusiveTouch business cards floating'
               priority
