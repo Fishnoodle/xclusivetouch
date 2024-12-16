@@ -32,7 +32,7 @@ export default function LoginSection() {
 
     if (!data.error) {
       toast.success('Login successful!');
-      window.location.href = `/login/${data.user._id}`;
+      window.location.href = `/login/${data.user}`;
     } else {
       console.log('ERROR');
       toast.error('Login failed: ' + data.error);
