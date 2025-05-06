@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Card, Input, Button, Typography, Textarea } from '@material-tailwind/react';
 import { Select, MenuItem, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 // Disabled LinkedIn for now - until we can figure out how to save LinkedIn key
 const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'Youtube', 'Twitch', 'Other']
 
-const Create = ({ id, profile }) => {
+const Create = ({ id }) => {
+    const router = useRouter();
+    
     // useStates
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -19,7 +23,9 @@ const Create = ({ id, profile }) => {
     const [headerColour, setHeaderColour] = useState('#000000');
     const [cardColour, setCardColour] = useState('#000000');
     const [photo, setPhoto] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(null);
     const [socialMedia, setSocialMedia] = useState([{ platform: '', link: '' }]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handlePlatformChange = (index, event) => {
         const newSocialMedia = [...socialMedia];
@@ -43,46 +49,41 @@ const Create = ({ id, profile }) => {
         setSocialMedia(newSocialMedia);
     };
 
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPhoto(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPhotoPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     async function handleSubmit(e) {
         e.preventDefault();
+        setIsSubmitting(true);
 
-        const formData = new FormData();
+        try {
+            const formData = new FormData();
 
-        formData.append('firstName', firstName);
-        formData.append('lastName', lastName);
-        formData.append('phoneNumber', phone);
-        formData.append('email', email);
-        formData.append('companyAddress', companyAddress);
-        formData.append('position', occupation);
-        formData.append('company', company);
-        formData.append('about', about);
-        formData.append('primaryColour', headerColour);
-        formData.append('cardColour', cardColour);
-        formData.append('profilePhoto', photo);
-        formData.append('socialMedia', JSON.stringify(socialMedia));
-
-        // Log FormData entries
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
-
-        if (id) {
-            const response = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`, {
-                method: 'PUT',
-                body: formData
-            });
-
-            const data = await response.json();
-
-            if (!data.error) {
-                alert('Profile updated successfully!');
-                window.scrollTo(0, 0);
-                window.location.reload();
-            } else {
-                alert(data.error);
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('phoneNumber', phone);
+            formData.append('email', email);
+            formData.append('companyAddress', companyAddress);
+            formData.append('position', occupation);
+            formData.append('company', company);
+            formData.append('about', about);
+            formData.append('primaryColour', headerColour);
+            formData.append('cardColour', cardColour);
+            
+            if (photo && photo instanceof File) {
+                formData.append('profilePhoto', photo);
             }
-        } else {
-            console.log(firstName);
+            
+            formData.append('socialMedia', JSON.stringify(socialMedia));
 
             const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
                 method: 'POST',
@@ -92,270 +93,319 @@ const Create = ({ id, profile }) => {
             const data = await response.json();
 
             if (!data.error) {
-                alert('Profile created successfully!');
-                window.scrollTo(0, 0);
-                window.location.reload();
+                toast.success('Profile created successfully!');
+                setTimeout(() => {
+                    if (id) {
+                        router.push(`/login/${id}`);
+                    } else {
+                        window.location.reload();
+                    }
+                }, 1500);
             } else {
-                alert(data.error);
+                toast.error(data.error || 'Failed to create profile');
+                setIsSubmitting(false);
             }
+        } catch (error) {
+            console.error('Create error:', error);
+            toast.error('An unexpected error occurred.');
+            setIsSubmitting(false);
         }
     }
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (id) {
-                    console.log(id);
-                    if (profile !== null) {
-                        setFirstName(profile.firstName);
-                        setLastName(profile.lastName);
-                        setPhone(profile.phoneNumber);
-                        setEmail(profile.email);
-                        setCompanyAddress(profile.companyAddress);
-                        setOccupation(profile.position);
-                        setCompany(profile.company);
-                        setAbout(profile.about);
-                        setHeaderColour(profile.colours[0]?.primaryColour || '#000000');
-                        setCardColour(profile.colours[0]?.cardColour || '#000000');
-                        setPhoto(profile.colours[0]?.profilePhoto);
-
-                        // Transform the profile.socialMedia data into the format that the form expects
-                        const initialSocialMedia = profile.socialMedia.map(item => {
-                            const platform = Object.keys(item)[0];
-                            const link = item[platform];
-                            return { platform: platform.charAt(0).toUpperCase() + platform.slice(1), link: link };
-                        });
-
-                        setSocialMedia(initialSocialMedia);
-                    }
-                }
-            } catch (err) {
-                console.log('Error caught:', err);
-            }
-        };
-
-        fetchData();
-    }, [id, profile]);
-
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '5vh' }}>
-            <Card color="transparent" shadow={false}>
-                <Typography variant="h4" color="blue-gray">
-                    {id ? 'Edit Profile' : 'Sign Up'}
-                </Typography>
-                <Typography color="gray" className="mt-1 font-normal">
-                    Nice to meet you! Enter your details profile.
-                </Typography>
-                <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
-                    <div className="mb-1 flex flex-col gap-6">
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            First Name
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+            <Card color="transparent" shadow={false} className="p-6 bg-white/5 backdrop-blur-sm rounded-xl">
+                <div className="flex justify-between items-center mb-6">
+                    <div>
+                        <Typography variant="h4" color="white" className="text-2xl md:text-3xl font-bold">
+                            Create Your Profile
                         </Typography>
-                        <Input
-                            size="lg"
-                            id="first_name"
-                            placeholder="First Name"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Last Name
+                        <Typography color="gray" className="mt-1 font-normal">
+                            Nice to meet you! Enter your profile details.
                         </Typography>
-                        <Input
-                            size="lg"
-                            id="last_name"
-                            placeholder="Last Name"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Phone Number
-                        </Typography>
-                        <Input
-                            type='tel'
-                            size="lg"
-                            id="phone"
-                            placeholder="Phone Number"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Email
-                        </Typography>
-                        <Input
-                            type='email'
-                            size="lg"
-                            id="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Company Address - Optional
-                        </Typography>
-                        <Input
-                            size="lg"
-                            id="address"
-                            placeholder="Company Address"
-                            value={companyAddress}
-                            onChange={(e) => setCompanyAddress(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Occupation
-                        </Typography>
-                        <Input
-                            size="lg"
-                            id="occupation"
-                            placeholder="Occupation"
-                            value={occupation}
-                            onChange={(e) => setOccupation(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Company
-                        </Typography>
-                        <Input
-                            size="lg"
-                            id="company"
-                            placeholder="Company"
-                            value={company}
-                            onChange={(e) => setCompany(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Tell Us About Yourself
-                        </Typography>
-                        <Textarea
-                            id="about"
-                            placeholder="About"
-                            value={about}
-                            onChange={(e) => setAbout(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Choose a colour for your heading
-                        </Typography>
-                        <TextField
-                            id="headerColour"
-                            type="color"
-                            value={headerColour}
-                            onChange={(e) => setHeaderColour(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            InputLabelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Choose a colour for your Card
-                        </Typography>
-                        <Select
-                            size="lg"
-                            id="cardColour"
-                            value={cardColour}
-                            onChange={(e) => setCardColour(e.target.value)}
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        >
-                            <MenuItem value="#000000">Black</MenuItem>
-                            <MenuItem value="#FFFFFF">White</MenuItem>
-                        </Select>
-
-                        <Typography variant="h6" color="blue-gray" className="-mb-3">
-                            Upload a photo
-                        </Typography>
-                        <Input
-                            type="file"
-                            size="lg"
-                            placeholder="Photo"
-                            onChange={(e) => setPhoto(e.target.files[0])}
-                            accept="image/*"
-                            className="!border-t-blue-gray-200 focus:!border-t-gray-900"
-                            labelProps={{
-                                className: "before:content-none after:content-none",
-                            }}
-                        />
-
-                        {/* Social Media */}
-                        {socialMedia.map((media, index) => (
-                            <div key={index}>
-                                <Typography variant='h6' color='blue-gray' className='-mb-1'>
-                                    Choose your social media platform
-                                </Typography>
-                                <Select
-                                    fullWidth
-                                    value={media.platform}
-                                    className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
-                                    onChange={(event) => handlePlatformChange(index, event)}
-                                >
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {socialMediaOptions.map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-
-                                <Typography variant='h6' color='blue-gray' className='-mb-1 mt-3'>
-                                    Enter your social media link
-                                </Typography>
-                                <Input
-                                    size='lg'
-                                    id='socialMediaLink'
-                                    placeholder='Social Media Link'
-                                    className='!border-t-blue-gray-200 focus:!border-t-gray-900 mt-3'
-                                    labelProps={{
-                                        className: 'before:content-none after:content-none',
-                                    }}
-                                    value={media.link}
-                                    onChange={(event) => handleLinkChange(index, event)}
-                                />
-                                <Button onClick={() => handleRemoveSocialMedia(index)} className='mt-5'>Remove</Button>
-                            </div>
-                        ))}
-                        <Button onClick={handleAddSocialMedia}>Add Social Media</Button>
                     </div>
-                    <Button className="mt-6" fullWidth onClick={handleSubmit}>
-                        {id ? 'Update Profile' : 'Create Profile'}
-                    </Button>
+                    
+                    {photoPreview && (
+                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#D4AF37]">
+                            <img 
+                                src={photoPreview} 
+                                alt="Profile preview" 
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    )}
+                </div>
+                
+                <form className="mt-8 mb-2 w-full" onSubmit={handleSubmit}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                First Name*
+                            </Typography>
+                            <Input
+                                size="lg"
+                                id="first_name"
+                                placeholder="First Name"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                Last Name*
+                            </Typography>
+                            <Input
+                                size="lg"
+                                id="last_name"
+                                placeholder="Last Name"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                Phone Number*
+                            </Typography>
+                            <Input
+                                type='tel'
+                                size="lg"
+                                id="phone"
+                                placeholder="Phone Number"
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                Email*
+                            </Typography>
+                            <Input
+                                type='email'
+                                size="lg"
+                                id="email"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                                required
+                            />
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                Company Address (Optional)
+                            </Typography>
+                            <Input
+                                size="lg"
+                                id="address"
+                                placeholder="Company Address"
+                                value={companyAddress}
+                                onChange={(e) => setCompanyAddress(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                            />
+                        </div>
+
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                Occupation*
+                            </Typography>
+                            <Input
+                                size="lg"
+                                id="occupation"
+                                placeholder="Occupation"
+                                value={occupation}
+                                onChange={(e) => setOccupation(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                Company*
+                            </Typography>
+                            <Input
+                                size="lg"
+                                id="company"
+                                placeholder="Company"
+                                value={company}
+                                onChange={(e) => setCompany(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                                required
+                            />
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <Typography variant="h6" color="blue-gray" className="-mb-3">
+                                Tell Us About Yourself
+                            </Typography>
+                            <Textarea
+                                id="about"
+                                placeholder="Share a little about yourself, your experience, and your expertise..."
+                                value={about}
+                                onChange={(e) => setAbout(e.target.value)}
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] mt-2"
+                                rows={4}
+                            />
+                        </div>
+
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="mb-2">
+                                Choose a color for your heading
+                            </Typography>
+                            <div className="flex items-center gap-3">
+                                <TextField
+                                    id="headerColour"
+                                    type="color"
+                                    value={headerColour}
+                                    onChange={(e) => setHeaderColour(e.target.value)}
+                                    className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37] w-16 h-10"
+                                />
+                                <span className="text-white">{headerColour}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <Typography variant="h6" color="blue-gray" className="mb-2">
+                                Choose a color for your Card
+                            </Typography>
+                            <Select
+                                id="cardColour"
+                                value={cardColour}
+                                onChange={(e) => setCardColour(e.target.value)}
+                                className="!border-blue-gray-200 focus:!border-[#D4AF37] bg-white"
+                            >
+                                <MenuItem value="#000000">Black</MenuItem>
+                                <MenuItem value="#FFFFFF">White</MenuItem>
+                            </Select>
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <Typography variant="h6" color="blue-gray" className="mb-2">
+                                Upload a profile photo
+                            </Typography>
+                            <Input
+                                type="file"
+                                size="lg"
+                                placeholder="Photo"
+                                onChange={handlePhotoChange}
+                                accept="image/*"
+                                className="!border-t-blue-gray-200 focus:!border-t-[#D4AF37]"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                            />
+                            <Typography color="gray" className="mt-1 text-xs italic">
+                                Recommended size: 400x400px square image
+                            </Typography>
+                        </div>
+
+                        {/* Social Media Section */}
+                        <div className="md:col-span-2 mt-6">
+                            <Typography variant="h5" color="blue-gray" className="mb-4">
+                                Social Media Profiles (Optional)
+                            </Typography>
+                            
+                            {socialMedia.map((media, index) => (
+                                <div key={index} className="mb-8 p-4 bg-black/20 rounded-lg">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <Typography variant='h6' color='blue-gray' className='mb-2'>
+                                                Platform
+                                            </Typography>
+                                            <Select
+                                                fullWidth
+                                                value={media.platform}
+                                                className='!border-blue-gray-200 focus:!border-[#D4AF37] bg-white'
+                                                onChange={(event) => handlePlatformChange(index, event)}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                {socialMediaOptions.map((option) => (
+                                                    <MenuItem key={option} value={option}>
+                                                        {option}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </div>
+
+                                        <div>
+                                            <Typography variant='h6' color='blue-gray' className='mb-2'>
+                                                Profile URL
+                                            </Typography>
+                                            <Input
+                                                size='lg'
+                                                id='socialMediaLink'
+                                                placeholder='https://example.com/profile'
+                                                className='!border-t-blue-gray-200 focus:!border-t-[#D4AF37]'
+                                                labelProps={{
+                                                    className: 'before:content-none after:content-none',
+                                                }}
+                                                value={media.link}
+                                                onChange={(event) => handleLinkChange(index, event)}
+                                            />
+                                        </div>
+                                    </div>
+                                    
+                                    <Button 
+                                        onClick={() => handleRemoveSocialMedia(index)} 
+                                        className="mt-3 bg-red-500 hover:bg-red-600"
+                                        size="sm"
+                                    >
+                                        Remove
+                                    </Button>
+                                </div>
+                            ))}
+                            
+                            <Button 
+                                onClick={handleAddSocialMedia}
+                                className="bg-[#D4AF37] hover:bg-[#E5C158] text-black"
+                            >
+                                Add Social Media
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end mt-10">
+                        <Button 
+                            type="submit"
+                            className="bg-[#D4AF37] hover:bg-[#E5C158] text-black py-3 px-8"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Creating...' : 'Create Profile'}
+                        </Button>
+                    </div>
                 </form>
             </Card>
         </div>
@@ -363,23 +413,7 @@ const Create = ({ id, profile }) => {
 };
 
 Create.propTypes = {
-    id: PropTypes.string,
-    profile: PropTypes.shape({
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
-        phoneNumber: PropTypes.string,
-        email: PropTypes.string,
-        companyAddress: PropTypes.string,
-        position: PropTypes.string,
-        company: PropTypes.string,
-        about: PropTypes.string,
-        colours: PropTypes.arrayOf(PropTypes.shape({
-            primaryColour: PropTypes.string,
-            cardColour: PropTypes.string,
-            profilePhoto: PropTypes.string,
-        })),
-        socialMedia: PropTypes.arrayOf(PropTypes.object),
-    }),
+    id: PropTypes.string
 };
 
 export default Create;

@@ -1,21 +1,34 @@
 import React from 'react';
+import { 
+    HiOutlineLink, 
+    HiOutlinePlusCircle, 
+    HiOutlineTrash,
+    HiOutlineGlobe 
+} from 'react-icons/hi';
+import { 
+    FaFacebook,
+    FaInstagram,
+    FaTwitter,
+    FaLinkedin,
+    FaYoutube
+} from 'react-icons/fa';
 import PropTypes from 'prop-types';
-
-// Mui Imports 
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import FormControl from '@mui/material/FormControl';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-
-import { Delete, DragIndicator } from '@mui/icons-material';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const Step3 = ({ formData, setFormData, handlePlatformChange, handleLinkChange, handleAddSocialMedia, handleRemoveSocialMedia, showErrors }) => {
-    const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'LinkedIn', 'Youtube', 'Twitch', 'Other'];
+    const socialMediaOptions = [
+        { value: 'Facebook', icon: <FaFacebook className="w-5 h-5 text-[#1877F2]" /> },
+        { value: 'Instagram', icon: <FaInstagram className="w-5 h-5 text-[#E1306C]" /> },
+        { value: 'Twitter', icon: <FaTwitter className="w-5 h-5 text-[#1DA1F2]" /> },
+        { value: 'LinkedIn', icon: <FaLinkedin className="w-5 h-5 text-[#0A66C2]" /> },
+        { value: 'YouTube', icon: <FaYoutube className="w-5 h-5 text-[#FF0000]" /> },
+        { value: 'Other', icon: <HiOutlineGlobe className="w-5 h-5 text-[#D4AF37]" /> }
+    ];
+
+    const getPlatformIcon = (platform) => {
+        const option = socialMediaOptions.find(opt => opt.value === platform);
+        return option ? option.icon : <HiOutlineGlobe className="w-5 h-5 text-[#D4AF37]" />;
+    };
 
     const handleDragEnd = (result) => {
         if (!result.destination) return;
@@ -31,57 +44,72 @@ const Step3 = ({ formData, setFormData, handlePlatformChange, handleLinkChange, 
     };
 
     return (
-        <div className="max-w-lg mx-auto p-6 bg-white">
-            <h2 className="text-4xl font-semibold mb-6 text-start">Step 3<span className='text-gold'>.</span> <br/> Social Media</h2>
+        <div className="w-full">
+            <div className="mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Social Media Links</h2>
+                <p className="text-gray-400">Add your social media accounts to your digital card</p>
+            </div>
             
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="socialMediaList">
                     {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                        <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4 mb-6">
                             {formData.socialMedia.map((social, index) => (
-                                <Draggable key={index} draggableId={index.toString()} index={index}>
-                                    {(provided) => (
-                                        <Card
+                                <Draggable key={index} draggableId={`social-${index}`} index={index}>
+                                    {(provided, snapshot) => (
+                                        <div
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
-                                            className="mb-4"
+                                            className={`p-4 rounded-lg border ${snapshot.isDragging ? 'border-[#D4AF37] bg-black/50' : 'border-gray-700 bg-black/30'} transition-colors`}
                                         >
-                                            <CardContent className="flex items-center space-x-4">
-                                                {formData.socialMedia.length > 1 && (
-                                                    <IconButton {...provided.dragHandleProps} className="mr-2">
-                                                        <DragIndicator />
-                                                    </IconButton>
-                                                )}
-                                                <FormControl className="mr-2" style={{ flex: 3, display: 'flex', flexDirection: 'column' }}>
-                                                    <Select
+                                            <div className="flex flex-col md:flex-row gap-4">
+                                                <div className="w-full md:w-1/3">
+                                                    <select
                                                         value={social.platform}
                                                         onChange={(e) => handlePlatformChange(index, e)}
-                                                        className={`w-full ${showErrors && !social.platform ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:border-gold`}
-                                                        style={{ height: '40px' }} // Decrease height
+                                                        className={`w-full px-4 py-3 bg-black/30 border ${showErrors && social.link && !social.platform ? 'border-red-500' : 'border-gray-700'} rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-[#D4AF37] transition-colors appearance-none`}
+                                                        style={{ 
+                                                            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23D4AF37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                                            backgroundRepeat: 'no-repeat',
+                                                            backgroundPosition: 'right 1rem center',
+                                                            backgroundSize: '1.5em 1.5em',
+                                                            paddingRight: '3rem'
+                                                        }}
                                                     >
-                                                        {socialMediaOptions.map((option) => (
-                                                            <MenuItem key={option} value={option}>{option}</MenuItem>
+                                                        <option value="">Select Platform</option>
+                                                        {socialMediaOptions.map(option => (
+                                                            <option key={option.value} value={option.value}>{option.value}</option>
                                                         ))}
-                                                    </Select>
-                                                </FormControl>
-                                                <TextField
-                                                    value={social.link}
-                                                    onChange={(e) => handleLinkChange(index, e)}
-                                                    placeholder="Enter URL"
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    className={`w-full ${showErrors && !social.link ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:border-gold`}
-                                                    InputProps={{ style: { height: '40px' } }} // Decrease height
-                                                    style={{ flex: 6 }}
-                                                />
+                                                    </select>
+                                                </div>
+                                                
+                                                <div className="flex-1 relative">
+                                                    {social.platform && (
+                                                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                                                            {getPlatformIcon(social.platform)}
+                                                        </div>
+                                                    )}
+                                                    <input
+                                                        type="text"
+                                                        value={social.link}
+                                                        onChange={(e) => handleLinkChange(index, e)}
+                                                        placeholder={social.platform ? `Enter your ${social.platform} URL` : "Enter social media URL"}
+                                                        className={`w-full px-4 py-3 ${social.platform ? 'pl-11' : 'pl-4'} bg-black/30 border ${showErrors && social.platform && !social.link ? 'border-red-500' : 'border-gray-700'} rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#D4AF37] transition-colors`}
+                                                    />
+                                                </div>
+                                                
                                                 {formData.socialMedia.length > 1 && (
-                                                    <IconButton onClick={() => handleRemoveSocialMedia(index)} className="ml-2" style={{ flex: 1 }}>
-                                                        <Delete />
-                                                    </IconButton>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveSocialMedia(index)}
+                                                        className="p-3 bg-black/30 border border-gray-700 rounded-lg text-red-400 hover:text-red-500 hover:border-red-500 transition-colors"
+                                                    >
+                                                        <HiOutlineTrash className="w-5 h-5" />
+                                                    </button>
                                                 )}
-                                            </CardContent>
-                                        </Card>
+                                            </div>
+                                        </div>
                                     )}
                                 </Draggable>
                             ))}
@@ -90,12 +118,29 @@ const Step3 = ({ formData, setFormData, handlePlatformChange, handleLinkChange, 
                     )}
                 </Droppable>
             </DragDropContext>
-            <Button onClick={handleAddSocialMedia} className="text-gold px-4 py-2 rounded-md hover:bg-gold-600">
-                Add Social Media
-            </Button>
+            
+            <button
+                type="button"
+                onClick={handleAddSocialMedia}
+                className="flex items-center gap-2 px-5 py-3 bg-black/30 border border-gray-700 rounded-lg text-[#D4AF37] hover:bg-black/50 hover:border-[#D4AF37] transition-colors"
+            >
+                <HiOutlinePlusCircle className="w-5 h-5" />
+                <span>Add Social Media Link</span>
+            </button>
+            
+            <div className="mt-6 p-4 bg-black/20 border border-gray-800 rounded-lg">
+                <div className="flex items-start gap-3">
+                    <HiOutlineLink className="w-5 h-5 text-[#D4AF37] mt-0.5" />
+                    <div>
+                        <p className="text-gray-300 text-sm">Tip: Drag and drop to reorder your social media links.</p>
+                        <p className="text-gray-500 text-xs mt-1">The order here will be reflected on your digital business card.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
+
 Step3.propTypes = {
     formData: PropTypes.shape({
         socialMedia: PropTypes.arrayOf(
@@ -103,7 +148,7 @@ Step3.propTypes = {
                 platform: PropTypes.string,
                 link: PropTypes.string
             })
-        )
+        ).isRequired
     }).isRequired,
     setFormData: PropTypes.func.isRequired,
     handlePlatformChange: PropTypes.func.isRequired,
