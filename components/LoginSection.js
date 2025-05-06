@@ -9,8 +9,8 @@ export default function LoginSection() {
   const router = useRouter();
   
   // UseStates
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [buttonText, setButtonText] = useState('Sign in');
   const [isLoginView, setIsLoginView] = useState(true);
@@ -70,11 +70,8 @@ export default function LoginSection() {
 
   // MERN Stack - Login API
   async function login(event) {
-    event.preventDefault()
-
-    console.log(email, password)
-
-    alert('Currently, the login feature is not available. Please try again later.') 
+    event.preventDefault();
+    setButtonText('Signing In');
 
     try {
       const response = await fetch('https://api.xclusivetouch.ca/api/login', {
