@@ -1,8 +1,5 @@
-import Head from "next/head";
-import React, { useState } from 'react';
-
+import React from 'react';
 import ShopSection from "@/components/ShopSection";
-import Footer from "@/components/Footer";
 
 export default function Shop() {
   return (

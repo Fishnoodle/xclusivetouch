@@ -57,7 +57,8 @@ function LoginProfile() {
     profile: null,
     profilePic: null,
     username: "",
-    loading: true
+    loading: true,
+    initialLoadComplete: false  // New state to track initial load completion
   });
 
   // Auth verification
@@ -110,19 +111,26 @@ function LoginProfile() {
         const res = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
         
         if (!res.ok) {
-          setState(prev => ({ ...prev, profile: null, loading: false }));
+          setState(prev => ({ 
+            ...prev, 
+            profile: null, 
+            loading: false,
+            initialLoadComplete: true  // Mark loading as complete
+          }));
           return;
         }
 
         const data = await res.json();
-
-        console.log(data);
-
-        const profilePicture = data.url
+        const profilePicture = data.url;
         const profileData = data.data?.profile?.[0];
 
         if (!profileData) {
-          setState(prev => ({ ...prev, profile: null, loading: false }));
+          setState(prev => ({ 
+            ...prev, 
+            profile: null, 
+            loading: false,
+            initialLoadComplete: true  // Mark loading as complete
+          }));
           return;
         }
 
@@ -131,11 +139,17 @@ function LoginProfile() {
           profile: profileData,
           profilePic: profilePicture,
           username: data.data.username,
-          loading: false
+          loading: false,
+          initialLoadComplete: true  // Mark loading as complete
         }));
       } catch (error) {
         console.error(error);
-        setState(prev => ({ ...prev, profile: null, loading: false }));
+        setState(prev => ({ 
+          ...prev, 
+          profile: null, 
+          loading: false,
+          initialLoadComplete: true  // Mark loading as complete even on error
+        }));
       }
     };
 
@@ -146,7 +160,8 @@ function LoginProfile() {
     router.push(`/login/${id}/edit`);
   }, [router, id]);
 
-  if (state.loading) {
+  // Always show loader during initial loading or until initial load is complete
+  if (state.loading || !state.initialLoadComplete) {
     return (
       <div className="flex justify-center items-center h-screen bg-[#071013]">
         <RotatingLines
@@ -162,7 +177,8 @@ function LoginProfile() {
     );
   }
 
-  if (!state.profile) {
+  // Only show MultiStepForm once initial load is complete AND profile is null
+  if (!state.profile && state.initialLoadComplete) {
     return <MultiStepForm />;
   }
 
@@ -176,8 +192,6 @@ function LoginProfile() {
       }
     });
   }
-
-  console.log(state.profilePic)
 
   return (
     <div className="min-h-screen bg-[#071013]">

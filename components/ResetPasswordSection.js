@@ -23,7 +23,6 @@ export default function ResetPasswordSection() {
         });
 
         const data = await response.json()
-        console.log(data)
 
         if (!data.error) {
             toast.success('Password reset email sent! Check your inbox')

@@ -37,7 +37,6 @@ export default function ConfirmPassword() {
         });
 
         const data = await response.json();
-        console.log(data);
 
         if (!data.error) {
             toast.success('Password reset successful! You can now login');

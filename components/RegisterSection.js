@@ -37,13 +37,12 @@ export default function RegisterSection() {
     })
 
     const data = await response.json()
-    console.log(data.error)
 
     if (!data.error) {
       toast.success('Registration successful. Please check your email for a confirmation link.')
       window.location.href = `/login`
     } else {
-      console.log('ERRO')
+      console.log('ERROR')
       toast.error('Registration Failed' + data.error)
       setButtonText('Sign Up')
     }
