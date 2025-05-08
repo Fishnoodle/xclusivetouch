@@ -1,8 +1,4 @@
 import React from 'react'
-import Image from "next/image";
-
-import grid8 from '@/public/assets/grid8.png'
-import grid2 from '@/public/assets/grid2.png'
 
 const BentoBox = () => {
     return(

@@ -127,8 +127,6 @@ const EditProfile = ({ id, profile, profileUrl }) => {
     }
 
     useEffect(() => {
-        console.log('Profile data:', profile);
-
         if (profile) {
             setFirstName(profile.firstName || '');
             setLastName(profile.lastName || '');
