@@ -11,14 +11,9 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
-    unoptimized: true, // Disable image optimization
   },
   turbopack: {
     root: __dirname,
-  },
-  output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: __dirname,
   },
 };
 
