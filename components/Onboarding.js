@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/router';
 import toast from "react-hot-toast";
+import { API_ENDPOINTS } from '@/lib/api';
 import { 
   HiOutlineUser, 
   HiOutlinePhotograph,
@@ -16,7 +17,7 @@ import Step3 from "./onboardingSteps/Step3";
 import Step4 from "./onboardingSteps/Step4";
 import PropTypes from 'prop-types';
 
-const OnboardingForm = ({ userId, prefillData }) => {
+const OnboardingForm = ({ prefillData, isEditMode = false }) => {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,7 +26,6 @@ const OnboardingForm = ({ userId, prefillData }) => {
         firstName: '',
         lastName: '',
         phone: '',
-        email: '',
         companyAddress: '',
         occupation: '',
         company: '',
@@ -54,7 +54,6 @@ const OnboardingForm = ({ userId, prefillData }) => {
                     ...prev,
                     firstName: firstName || prev.firstName,
                     lastName: lastName || prev.lastName,
-                    email: prefillData.email || prev.email,
                 }));
             } catch (error) {
                 console.error('Error setting prefill data:', error);
@@ -132,17 +131,6 @@ const OnboardingForm = ({ userId, prefillData }) => {
             case 4: {
                 if (!formData.phone || !formData.phone.trim()) {
                     toast.error('Phone number is required');
-                    return false;
-                }
-                if (!formData.email || !formData.email.trim()) {
-                    toast.error('Email address is required');
-                    return false;
-                }
-                
-                // Email validation
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(formData.email)) {
-                    toast.error('Please enter a valid email address');
                     return false;
                 }
                 
@@ -282,11 +270,20 @@ const OnboardingForm = ({ userId, prefillData }) => {
         try {
             const form = new FormData();
 
+            // Get userId from localStorage
+            const storedUserId = localStorage.getItem('userId');
+            if (!storedUserId) {
+                toast.error('User ID not found. Please log in again.');
+                setIsSubmitting(false);
+                setCurrentStep(4);
+                return;
+            }
+
             // Add user details
+            form.append('userId', storedUserId);
             form.append('firstName', formData.firstName.trim());
             form.append('lastName', formData.lastName.trim());
             form.append('phoneNumber', formData.phone.trim());
-            form.append('email', formData.email.trim());
             form.append('companyAddress', formData.companyAddress.trim());
             form.append('position', formData.occupation.trim());
             form.append('company', formData.company.trim());
@@ -302,30 +299,39 @@ const OnboardingForm = ({ userId, prefillData }) => {
             // Add social media
             const formattedSocialMedia = formatSocialMediaForAPI(formData.socialMedia);
             form.append('socialMedia', JSON.stringify(formattedSocialMedia));
-            
-            // Add userId if provided
-            if (userId) {
-                form.append('userId', userId);
-            }
 
-            const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
-                method: 'POST',
+            const endpoint = isEditMode ? API_ENDPOINTS.updateProfile(storedUserId) : API_ENDPOINTS.createProfile;
+            const method = isEditMode ? 'PUT' : 'POST';
+
+            const response = await fetch(endpoint, {
+                method: method,
                 body: form,
             });
 
             const data = await response.json();
 
-            if (!data.error) {
-                toast.success('Profile created successfully!');
+            if (data.status === 'ok') {
+                const successMsg = isEditMode ? 'Profile updated successfully!' : 'Profile created successfully!';
+                toast.success(successMsg);
+                
+                // Store profileSlug for new profiles
+                if (!isEditMode && data.profileSlug) {
+                    localStorage.setItem('profileSlug', data.profileSlug);
+                }
+                
                 // Go to success state
                 setCurrentStep(6);
                 
                 // Redirect after a short delay
                 setTimeout(() => {
-                    router.push(`/login/${userId}`);
+                    if (!isEditMode && data.profileSlug) {
+                        toast.success(`Your profile URL: xclusivetouch.ca/${data.profileSlug}`);
+                    }
+                    router.push(`/login/${storedUserId}`);
                 }, 2500);
             } else {
-                toast.error('Profile creation failed: ' + (data.error || 'Unknown error'));
+                const errorMsg = data.error || 'Unknown error occurred';
+                toast.error((isEditMode ? 'Update' : 'Profile creation') + ' failed: ' + errorMsg);
                 setIsSubmitting(false);
                 setCurrentStep(4); // Go back to last step on error
             }
@@ -349,11 +355,14 @@ const OnboardingForm = ({ userId, prefillData }) => {
                             </div>
                             
                             <h1 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                                Welcome{formData.firstName ? `, ${formData.firstName}` : ''}!
+                                {isEditMode ? 'Update Your Profile' : `Welcome${formData.firstName ? `, ${formData.firstName}` : ''}!`}
                             </h1>
                             
                             <p className="text-gray-300 text-lg mb-10 max-w-xl mx-auto">
-                                Let&apos;s create your digital business card profile. This will only take a few minutes.
+                                {isEditMode 
+                                    ? 'Make changes to your digital business card profile.' 
+                                    : 'Let\'s create your digital business card profile. This will only take a few minutes.'
+                                }
                             </p>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-10">
@@ -402,7 +411,7 @@ const OnboardingForm = ({ userId, prefillData }) => {
                                 onClick={handleNext}
                                 className="bg-[#D4AF37] hover:bg-[#C09A20] text-black py-4 px-10 rounded-xl font-medium transition-colors shadow-lg flex items-center justify-center mx-auto gap-2"
                             >
-                                <span>Get Started</span>
+                                <span>{isEditMode ? 'Continue Editing' : 'Get Started'}</span>
                                 <HiOutlineChevronRight className="w-5 h-5" />
                             </button>
                         </div>
@@ -568,8 +577,11 @@ OnboardingForm.propTypes = {
     userId: PropTypes.string,
     prefillData: PropTypes.shape({
         name: PropTypes.string,
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
         email: PropTypes.string,
     }),
+    isEditMode: PropTypes.bool,
 };
 
 export default OnboardingForm;

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin, FaYoutube, FaTwitch } from 'react-icons/fa';
 import toast from "react-hot-toast"
 import { Globe } from "react-feather";
+import { API_ENDPOINTS } from '@/lib/api';
 
 const Header = ({ profile, profilePictureUrl }) => {
     // Use States
@@ -55,8 +56,8 @@ const Header = ({ profile, profilePictureUrl }) => {
         setCompany(profile.company || "");
         setAbout(profile.about || "");
 
-        setHeaderColour(profile?.colours?.[0]?.primaryColour || "#FFFFFF");
-        setCardColour(profile?.colours?.[0]?.cardColour || "#FFFFFF");
+        setHeaderColour(profile?.colours?.[0]?.primaryColour || "#D4AF37");
+        setCardColour(profile?.colours?.[0]?.cardColour || "#000000");
 
         const socialsArray = profile?.socialMedia || [];
         
@@ -74,16 +75,7 @@ const Header = ({ profile, profilePictureUrl }) => {
         setSocialLinks(newSocialLinks);
       }
     }, [
-      profile.firstName,
-      profile.lastName,
-      profile.phoneNumber,
-      profile.email,
-      profile.companyAddress,
-      profile.position,
-      profile.company,
-      profile.about,
-      profile.colours,
-      profile.socialMedia,
+      profile,
       profilePictureUrl
     ]);
 
@@ -133,7 +125,7 @@ const Header = ({ profile, profilePictureUrl }) => {
       const id = profile._id // Adjust based on actual ID field
 
       try {
-        const response = await fetch(`https://api.xclusivetouch.ca/api/exchangeContact/${id}`, {
+        const response = await fetch(API_ENDPOINTS.exchangeContact(id), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

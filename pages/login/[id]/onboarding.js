@@ -4,6 +4,7 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Loader from '@/components/Loader';
+import { API_ENDPOINTS } from '@/lib/api';
 
 // Dynamically imported components
 const OnboardingForm = dynamic(() => import('@/components/Onboarding'), {
@@ -37,7 +38,7 @@ export default function OnboardingPage() {
     // Verify token is valid and get user data
     const verifyAuth = async () => {
       try {
-        const response = await fetch('https://api.xclusivetouch.ca/api/verify-token', {
+        const response = await fetch(API_ENDPOINTS.verifyToken, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -56,7 +57,7 @@ export default function OnboardingPage() {
         }
         
         // Check if user already has a profile
-        const profileCheck = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
+        const profileCheck = await fetch(API_ENDPOINTS.profile(id));
         
         if (profileCheck.ok) {
           const profileData = await profileCheck.json();
@@ -69,7 +70,7 @@ export default function OnboardingPage() {
         }
         
         // Fetch user data to prefill the form
-        const userDataResponse = await fetch(`https://api.xclusivetouch.ca/api/user/${id}`, {
+        const userDataResponse = await fetch(API_ENDPOINTS.user(id), {
           headers: {
             'Authorization': `Bearer ${token}`
           }

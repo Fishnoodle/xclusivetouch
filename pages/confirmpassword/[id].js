@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
+import { API_ENDPOINTS } from '@/lib/api';
 
 export default function ConfirmPassword() {
     const router = useRouter();
@@ -25,7 +26,7 @@ export default function ConfirmPassword() {
             return;
         }
 
-        const response = await fetch(`https://api.xclusivetouch.ca/api/confirmreset/${id}`, {
+        const response = await fetch(`${API_ENDPOINTS.confirmReset}/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -3,11 +3,15 @@ import IconButton from '@mui/material/IconButton';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Link from 'next/link'
 import {toast, Toaster} from 'react-hot-toast'
+import { useRouter } from 'next/router';
+import { validateRegistrationForm } from '@/lib/validation';
+import { API_ENDPOINTS } from '@/lib/api';
 
 
 export default function RegisterSection() {
+  const router = useRouter();
+  
   // UseStates
-  const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false);
@@ -17,34 +21,55 @@ export default function RegisterSection() {
 
   async function register(event) {
     event.preventDefault()
-    setButtonText('Signing Up')
+    setButtonText('Signing Up...')
 
-    if (password !== confirmPassword) {
-      toast.error('Passwords do not match!')
-      return
+    // Validate form inputs
+    const validation = validateRegistrationForm({
+      email,
+      password,
+      confirmPassword
+    });
+
+    if (!validation.isValid) {
+      // Show first error
+      const firstError = Object.values(validation.errors)[0];
+      toast.error(firstError);
+      setButtonText('Sign Up');
+      return;
     }
 
-    const response = await fetch('https://api.xclusivetouch.ca/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: fullName.replace(/\s+/g, '').toLowerCase(), // Sent without spaces
-        email: email,
-        password: password
+    try {
+      const response = await fetch(API_ENDPOINTS.register, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
       })
-    })
 
-    const data = await response.json()
+      const data = await response.json()
 
-    if (!data.error) {
-      toast.success('Registration successful. Please check your email for a confirmation link.')
-      window.location.href = `/login`
-    } else {
-      console.log('ERROR')
-      toast.error('Registration Failed' + data.error)
-      setButtonText('Sign Up')
+      if (data.status === 'ok') {
+        toast.success('Registration successful! Check your email to verify your account.', {
+          duration: 4000,
+        });
+        
+        // Redirect to "check your email" page
+        setTimeout(() => {
+          router.push(`/check-your-email?email=${encodeURIComponent(email)}`);
+        }, 1500);
+      } else {
+        console.log('ERROR')
+        toast.error(data.error || 'Registration failed. Please try again.')
+        setButtonText('Sign Up')
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast.error('Network error. Please try again.');
+      setButtonText('Sign Up');
     }
   }
   
@@ -60,23 +85,6 @@ export default function RegisterSection() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
-
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium leading-6 text-gray-900">
-                Full Name
-              </label>
-              <div className="mt-2">
-                <input 
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">

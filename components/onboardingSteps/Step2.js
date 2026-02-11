@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { HiOutlinePhotograph, HiOutlineColorSwatch, HiOutlineDocument, HiOutlineUpload, HiOutlineUser } from 'react-icons/hi';
 import Image from 'next/image';
+import Cropper from 'react-easy-crop';
 
 const Step2 = ({ formData, handleChange, handleFileChange, showErrors }) => {
     const [isFocused, setIsFocused] = useState({
@@ -12,6 +13,11 @@ const Step2 = ({ formData, handleChange, handleFileChange, showErrors }) => {
     });
     const fileInputRef = useRef(null);
     const [previewImage, setPreviewImage] = useState(formData.photo ? URL.createObjectURL(formData.photo) : null);
+    const [isCropOpen, setIsCropOpen] = useState(false);
+    const [rawImage, setRawImage] = useState(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
     const handleFocus = (field) => {
         setIsFocused({ ...isFocused, [field]: true });
@@ -25,15 +31,92 @@ const Step2 = ({ formData, handleChange, handleFileChange, showErrors }) => {
 
     const handlePhotoChange = (e) => {
         if (e.target.files && e.target.files[0]) {
-            // If there was a previous preview URL, revoke it to prevent memory leaks
-            if (previewImage) {
-                URL.revokeObjectURL(previewImage);
-            }
-            
-            // Create a new preview URL
-            setPreviewImage(URL.createObjectURL(e.target.files[0]));
-            handleFileChange(e);
+            const file = e.target.files[0];
+            const newPreview = URL.createObjectURL(file);
+            setRawImage(newPreview);
+            setCrop({ x: 0, y: 0 });
+            setZoom(1);
+            setIsCropOpen(true);
         }
+    };
+
+    const onCropComplete = useCallback((_, croppedPixels) => {
+        setCroppedAreaPixels(croppedPixels);
+    }, []);
+
+    const createImage = (url) =>
+        new Promise((resolve, reject) => {
+            const image = new window.Image();
+            image.addEventListener('load', () => resolve(image));
+            image.addEventListener('error', reject);
+            image.setAttribute('crossOrigin', 'anonymous');
+            image.src = url;
+        });
+
+    const getCroppedImg = async (imageSrc, pixelCrop) => {
+        const image = await createImage(imageSrc);
+        const canvas = document.createElement('canvas');
+        canvas.width = pixelCrop.width;
+        canvas.height = pixelCrop.height;
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(
+            image,
+            pixelCrop.x,
+            pixelCrop.y,
+            pixelCrop.width,
+            pixelCrop.height,
+            0,
+            0,
+            pixelCrop.width,
+            pixelCrop.height
+        );
+
+        return new Promise((resolve) => {
+            canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92);
+        });
+    };
+
+    const handleCropSave = async () => {
+        if (!rawImage || !croppedAreaPixels) {
+            setIsCropOpen(false);
+            return;
+        }
+
+        const croppedBlob = await getCroppedImg(rawImage, croppedAreaPixels);
+        if (!croppedBlob) {
+            setIsCropOpen(false);
+            return;
+        }
+
+        const croppedFile = new File([croppedBlob], 'profile-photo.jpg', { type: 'image/jpeg' });
+
+        if (previewImage) {
+            URL.revokeObjectURL(previewImage);
+        }
+        const croppedPreview = URL.createObjectURL(croppedFile);
+        setPreviewImage(croppedPreview);
+
+        handleFileChange({
+            target: {
+                name: 'photo',
+                files: [croppedFile]
+            }
+        });
+
+        if (rawImage) {
+            URL.revokeObjectURL(rawImage);
+        }
+        setRawImage(null);
+        setIsCropOpen(false);
+    };
+
+    const handleCropCancel = () => {
+        if (rawImage) {
+            URL.revokeObjectURL(rawImage);
+        }
+        setRawImage(null);
+        setIsCropOpen(false);
     };
 
     const triggerFileInput = () => {
@@ -71,26 +154,22 @@ const Step2 = ({ formData, handleChange, handleFileChange, showErrors }) => {
                     <div className="form-group">
                         <label className={`flex items-center text-sm font-medium mb-2 ${isFocused.cardColour ? 'text-[#D4AF37]' : 'text-gray-300'}`}>
                             <HiOutlineColorSwatch className="w-4 h-4 mr-2" />
-                            Card Background
+                            Card Background Color
                         </label>
-                        <select
-                            name="cardColour"
-                            value={formData.cardColour}
-                            onChange={handleChange}
-                            onFocus={() => handleFocus('cardColour')}
-                            onBlur={() => handleBlur('cardColour')}
-                            className={`w-full px-4 py-3 bg-black/30 border ${isFocused.cardColour ? 'border-[#D4AF37]' : 'border-gray-700'} rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-[#D4AF37] transition-colors appearance-none`}
-                            style={{ 
-                                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23D4AF37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                                backgroundRepeat: 'no-repeat',
-                                backgroundPosition: 'right 1rem center',
-                                backgroundSize: '1.5em 1.5em',
-                                paddingRight: '3rem'
-                            }}
-                        >
-                            <option value="#000000">Black</option>
-                            <option value="#FFFFFF">White</option>
-                        </select>
+                        <div className="flex items-center space-x-3">
+                            <input
+                                type="color"
+                                name="cardColour"
+                                value={formData.cardColour}
+                                onChange={handleChange}
+                                onFocus={() => handleFocus('cardColour')}
+                                onBlur={() => handleBlur('cardColour')}
+                                className="w-12 h-12 rounded cursor-pointer border-0 bg-transparent"
+                            />
+                            <div className="flex-1 px-4 py-3 bg-black/30 border border-gray-700 rounded-lg text-white overflow-hidden">
+                                {formData.cardColour}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -160,6 +239,67 @@ const Step2 = ({ formData, handleChange, handleFileChange, showErrors }) => {
                     </div>
                 </div>
             </div>
+
+            {isCropOpen && rawImage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+                    <div className="bg-[#0A1822] w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
+                        <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                            <h3 className="text-white font-semibold">Adjust your photo</h3>
+                            <button
+                                type="button"
+                                onClick={handleCropCancel}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="relative w-full h-80 bg-black">
+                            <Cropper
+                                image={rawImage}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={1}
+                                onCropChange={setCrop}
+                                onZoomChange={setZoom}
+                                onCropComplete={onCropComplete}
+                            />
+                        </div>
+
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="text-sm text-gray-300">Zoom</label>
+                                <input
+                                    type="range"
+                                    min={1}
+                                    max={3}
+                                    step={0.1}
+                                    value={zoom}
+                                    onChange={(e) => setZoom(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    onClick={handleCropCancel}
+                                    className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleCropSave}
+                                    className="px-4 py-2 rounded-lg bg-[#D4AF37] text-black hover:bg-[#E5C158] transition-colors"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

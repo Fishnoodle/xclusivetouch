@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Card, Input, Button, Typography, Textarea } from '@material-tailwind/react';
 import { Select, MenuItem, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { API_ENDPOINTS } from '@/lib/api';
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaTwitch, FaGlobe } from 'react-icons/fa';
 import { HiOutlinePhotograph, HiOutlineSave, HiArrowLeft, HiPlus, HiTrash } from 'react-icons/hi';
+import Cropper from 'react-easy-crop';
 
 // Disabled LinkedIn for now - until we can figure out how to save LinkedIn key
 const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'Youtube', 'Twitch', 'Other'];
@@ -37,6 +39,12 @@ const EditProfile = ({ id, profile, profileUrl }) => {
     const [socialMedia, setSocialMedia] = useState([{ platform: '', link: '' }]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [activeSection, setActiveSection] = useState('personal');
+    const fileInputRef = useRef(null);
+    const [isCropOpen, setIsCropOpen] = useState(false);
+    const [rawImage, setRawImage] = useState(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
     const handlePlatformChange = (index, event) => {
         const newSocialMedia = [...socialMedia];
@@ -61,15 +69,91 @@ const EditProfile = ({ id, profile, profileUrl }) => {
     };
 
     const handlePhotoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setPhoto(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPhotoPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const newPreview = URL.createObjectURL(file);
+            setRawImage(newPreview);
+            setCrop({ x: 0, y: 0 });
+            setZoom(1);
+            setIsCropOpen(true);
         }
+    };
+
+    const onCropComplete = useCallback((_, croppedPixels) => {
+        setCroppedAreaPixels(croppedPixels);
+    }, []);
+
+    const createImage = (url) =>
+        new Promise((resolve, reject) => {
+            const image = new window.Image();
+            image.addEventListener('load', () => resolve(image));
+            image.addEventListener('error', reject);
+            image.setAttribute('crossOrigin', 'anonymous');
+            image.src = url;
+        });
+
+    const getCroppedImg = async (imageSrc, pixelCrop) => {
+        const image = await createImage(imageSrc);
+        const canvas = document.createElement('canvas');
+        canvas.width = pixelCrop.width;
+        canvas.height = pixelCrop.height;
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(
+            image,
+            pixelCrop.x,
+            pixelCrop.y,
+            pixelCrop.width,
+            pixelCrop.height,
+            0,
+            0,
+            pixelCrop.width,
+            pixelCrop.height
+        );
+
+        return new Promise((resolve) => {
+            canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92);
+        });
+    };
+
+    const handleCropSave = async () => {
+        if (!rawImage || !croppedAreaPixels) {
+            setIsCropOpen(false);
+            return;
+        }
+
+        const croppedBlob = await getCroppedImg(rawImage, croppedAreaPixels);
+        if (!croppedBlob) {
+            setIsCropOpen(false);
+            return;
+        }
+
+        const croppedFile = new File([croppedBlob], 'profile-photo.jpg', { type: 'image/jpeg' });
+
+        if (photoPreview) {
+            URL.revokeObjectURL(photoPreview);
+        }
+        const croppedPreview = URL.createObjectURL(croppedFile);
+        setPhotoPreview(croppedPreview);
+        setPhoto(croppedFile);
+
+        if (rawImage) {
+            URL.revokeObjectURL(rawImage);
+        }
+        setRawImage(null);
+        setIsCropOpen(false);
+    };
+
+    const handleCropCancel = () => {
+        if (rawImage) {
+            URL.revokeObjectURL(rawImage);
+        }
+        setRawImage(null);
+        setIsCropOpen(false);
+    };
+
+    const triggerFileInput = () => {
+        fileInputRef.current.click();
     };
 
 // Modify the handleCancel and handleSubmit functions:
@@ -101,7 +185,7 @@ const EditProfile = ({ id, profile, profileUrl }) => {
             
             formData.append('socialMedia', JSON.stringify(socialMedia));
     
-            const response = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`, {
+            const response = await fetch(API_ENDPOINTS.updateProfile(id), {
                 method: 'PUT',
                 body: formData
             });
@@ -546,29 +630,18 @@ const EditProfile = ({ id, profile, profileUrl }) => {
                                         
                                         <div className="space-y-4">
                                             <Typography variant="h6" color="white" className="font-medium">
-                                                Card Color
+                                                Card Background Color
                                             </Typography>
-                                            <div className="space-y-3">
-                                                <div 
-                                                    className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${cardColour === '#000000' ? 'border-[#D4AF37]' : 'border-transparent hover:border-white/20'}`}
-                                                    onClick={() => setCardColour('#000000')}
-                                                >
-                                                    <div className="w-10 h-10 rounded-md bg-black mr-3"></div>
-                                                    <div>
-                                                        <div className="text-white">Black</div>
-                                                        <div className="text-gray-400 text-sm">Dark background with light text</div>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div 
-                                                    className={`flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${cardColour === '#FFFFFF' ? 'border-[#D4AF37]' : 'border-transparent hover:border-white/20'}`}
-                                                    onClick={() => setCardColour('#FFFFFF')}
-                                                >
-                                                    <div className="w-10 h-10 rounded-md bg-white mr-3"></div>
-                                                    <div>
-                                                        <div className="text-white">White</div>
-                                                        <div className="text-gray-400 text-sm">Light background with dark text</div>
-                                                    </div>
+                                            <div className="flex items-center gap-4">
+                                                <input
+                                                    type="color"
+                                                    value={cardColour}
+                                                    onChange={(e) => setCardColour(e.target.value)}
+                                                    className="w-20 h-12 rounded-lg overflow-hidden cursor-pointer border border-white/20 hover:border-white/40 transition-colors"
+                                                />
+                                                <div className="flex-1">
+                                                    <div className="text-white font-mono">{cardColour}</div>
+                                                    <div className="text-gray-400 text-sm">Choose any color for your card background</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -580,24 +653,49 @@ const EditProfile = ({ id, profile, profileUrl }) => {
                                         <div className="shrink-0 mr-4 bg-blue-500/20 p-3 rounded-lg text-blue-400">
                                             <HiOutlinePhotograph size={24} />
                                         </div>
-                                        <div>
+                                        <div className="flex-1">
                                             <Typography variant="h6" color="white" className="font-medium mb-1">
                                                 Profile Photo
                                             </Typography>
                                             <p className="text-gray-400 text-sm mb-4">
-                                                Upload a professional photo for your digital business card. Square photos work best.
+                                                Upload a professional photo for your digital business card. You can crop and zoom the image.
                                             </p>
-                                            <Input
-                                                type="file"
-                                                size="lg"
-                                                placeholder="Photo"
-                                                onChange={handlePhotoChange}
-                                                accept="image/*"
-                                                className="!border-white/20 focus:!border-[#D4AF37] bg-black/20 text-white"
-                                                labelProps={{
-                                                    className: "before:content-none after:content-none",
-                                                }}
-                                            />
+                                            
+                                            <div className="flex flex-col md:flex-row items-center gap-4">
+                                                <div className="w-24 h-24 rounded-full overflow-hidden bg-black/40 border-2 border-[#D4AF37] flex items-center justify-center flex-shrink-0">
+                                                    {photoPreview ? (
+                                                        <img 
+                                                            src={photoPreview} 
+                                                            alt="Profile preview" 
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <HiOutlinePhotograph size={40} className="text-gray-500" />
+                                                    )}
+                                                </div>
+                                                
+                                                <div className="flex-1 w-full">
+                                                    <button
+                                                        type="button"
+                                                        onClick={triggerFileInput}
+                                                        className="w-full px-4 py-3 bg-black/30 border border-gray-700 rounded-lg text-white hover:border-[#D4AF37] transition-colors flex items-center justify-center gap-2"
+                                                    >
+                                                        <HiOutlinePhotograph className="w-5 h-5 text-[#D4AF37]" />
+                                                        <span>{photoPreview ? 'Change Photo' : 'Upload Photo'}</span>
+                                                    </button>
+                                                    <p className="text-gray-500 text-xs mt-2">
+                                                        Recommended: Square image, at least 400x400px. Max size: 5MB
+                                                    </p>
+                                                    
+                                                    <input
+                                                        ref={fileInputRef}
+                                                        type="file"
+                                                        onChange={handlePhotoChange}
+                                                        accept="image/jpeg, image/png, image/gif, image/webp"
+                                                        className="hidden"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -637,6 +735,68 @@ const EditProfile = ({ id, profile, profileUrl }) => {
                     </form>
                 </Card>
             </div>
+
+            {/* Crop Modal */}
+            {isCropOpen && rawImage && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+                    <div className="bg-[#0A1822] w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden">
+                        <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                            <h3 className="text-white font-semibold">Adjust your photo</h3>
+                            <button
+                                type="button"
+                                onClick={handleCropCancel}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="relative w-full h-80 bg-black">
+                            <Cropper
+                                image={rawImage}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={1}
+                                onCropChange={setCrop}
+                                onZoomChange={setZoom}
+                                onCropComplete={onCropComplete}
+                            />
+                        </div>
+
+                        <div className="p-6 space-y-4">
+                            <div>
+                                <label className="text-sm text-gray-300">Zoom</label>
+                                <input
+                                    type="range"
+                                    min={1}
+                                    max={3}
+                                    step={0.1}
+                                    value={zoom}
+                                    onChange={(e) => setZoom(Number(e.target.value))}
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    onClick={handleCropCancel}
+                                    className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleCropSave}
+                                    className="px-4 py-2 rounded-lg bg-[#D4AF37] text-black hover:bg-[#E5C158] transition-colors font-medium"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <style>{`
                 .hide-scrollbar::-webkit-scrollbar {

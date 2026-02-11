@@ -4,6 +4,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Link from 'next/link';
 import { toast, Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { API_ENDPOINTS } from '@/lib/api';
+import { isValidEmail, validatePassword } from '@/lib/validation';
 
 export default function LoginSection() {
   const router = useRouter();
@@ -15,6 +17,8 @@ export default function LoginSection() {
   const [buttonText, setButtonText] = useState('Sign in');
   const [isLoginView, setIsLoginView] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [needsEmailVerification, setNeedsEmailVerification] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState('');
   
   // Register states
   const [registerEmail, setRegisterEmail] = useState('');
@@ -23,7 +27,6 @@ export default function LoginSection() {
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [registerButtonText, setRegisterButtonText] = useState('Create Account');
-  const [name, setName] = useState('');
 
   // Check if user is already authenticated
   useEffect(() => {
@@ -33,8 +36,7 @@ export default function LoginSection() {
       
       if (token && userId) {
         try {
-          // You need to create this endpoint in your backend
-          const response = await fetch('https://api.xclusivetouch.ca/api/verify-token', {
+          const response = await fetch(API_ENDPOINTS.verifyToken, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -71,10 +73,20 @@ export default function LoginSection() {
   // MERN Stack - Login API
   async function login(event) {
     event.preventDefault();
-    setButtonText('Signing In');
+    
+    // Reset verification error state
+    setNeedsEmailVerification(false);
+    
+    // Validate email
+    if (!isValidEmail(email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    
+    setButtonText('Signing In...');
 
     try {
-      const response = await fetch('https://api.xclusivetouch.ca/api/login', {
+      const response = await fetch(API_ENDPOINTS.login, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,17 +100,58 @@ export default function LoginSection() {
       const data = await response.json();
 
       if (data.status === 'ok') {
-        // Store token and user ID in localStorage
+        // Store token, userId, and email from backend response
         if (data.token) {
-          localStorage.setItem('xclusiveToken', data.token);
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('xclusiveToken', data.token); // Keep for backwards compatibility
         }
-        localStorage.setItem('userId', data.user);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('email', data.email); // Store email from backend
         
         toast.success('Login successful!');
-        router.push(`/login/${data.user}`);
+        
+        // Check if profile exists
+        try {
+          const profileResponse = await fetch(API_ENDPOINTS.profile(data.userId), {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${data.token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+          
+          const profileData = await profileResponse.json();
+          
+          // Check if profile exists (status: 'ok' with data) or needs to be created (status: 'error')
+          if (profileData.status === 'ok' && profileData.data) {
+            // Profile exists, redirect to dashboard
+            console.log('Profile found, redirecting to dashboard');
+            router.push(`/login/${data.userId}`);
+          } else if (profileData.status === 'error') {
+            // Profile doesn't exist or server error - redirect to onboarding
+            // Handles: "Profile not found", "Failed to retrieve profile", and any other errors
+            console.log(`Profile error: ${profileData.error}, redirecting to onboarding`);
+            router.push(`/login/${data.userId}/onboarding`);
+          } else {
+            // Unknown response format, default to onboarding
+            console.log('Unknown profile response, redirecting to onboarding');
+            router.push(`/login/${data.userId}/onboarding`);
+          }
+        } catch (error) {
+          console.error('Error checking profile:', error);
+          // Network or parse error, default to onboarding to be safe
+          router.push(`/login/${data.userId}/onboarding`);
+        }
       } else {
-        console.log('ERROR');
-        toast.error('Login failed: ' + (data.error || 'Invalid credentials'));
+        // Check if error is due to unverified email
+        if (data.error && data.error.toLowerCase().includes('verify your email')) {
+          setNeedsEmailVerification(true);
+          setUnverifiedEmail(email);
+          toast.error(data.error, { duration: 5000 });
+        } else {
+          console.log('ERROR');
+          toast.error('Login failed: ' + (data.error || 'Invalid credentials'));
+        }
         setButtonText('Sign in');
       }
     } catch (error) {
@@ -107,9 +160,48 @@ export default function LoginSection() {
     }
   }
   
+  // Resend verification email
+  const handleResendVerification = async () => {
+    if (!unverifiedEmail) return;
+    
+    try {
+      const response = await fetch(API_ENDPOINTS.resendConfirmation, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: unverifiedEmail })
+      });
+      
+      const data = await response.json();
+      
+      if (data.status === 'ok') {
+        toast.success('Verification email sent! Please check your inbox.');
+      } else {
+        toast.error(data.error || 'Failed to send verification email');
+      }
+    } catch (error) {
+      toast.error('Failed to send verification email');
+      console.error('Resend error:', error);
+    }
+  };
+  
   // Register function
   async function register(event) {
     event.preventDefault();
+    
+    // Validate email
+    if (!isValidEmail(registerEmail)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    
+    // Validate password
+    const passwordValidation = validatePassword(registerPassword);
+    if (!passwordValidation.isValid) {
+      toast.error(passwordValidation.message);
+      return;
+    }
     
     if (registerPassword !== confirmPassword) {
       toast.error('Passwords do not match');
@@ -119,13 +211,12 @@ export default function LoginSection() {
     setRegisterButtonText('Creating Account...');
 
     try {
-      const response = await fetch('https://api.xclusivetouch.ca/api/register', {
+      const response = await fetch(API_ENDPOINTS.register, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: name.replace(/\s+/g, '').toLowerCase(), // Sent without spaces
           email: registerEmail,
           password: registerPassword,
         }),
@@ -134,9 +225,11 @@ export default function LoginSection() {
       const data = await response.json();
 
       if (data.status === 'ok') {
-        toast.success('Registration successful! Please sign in.');
-        setIsLoginView(true); // Switch back to login view
-        setEmail(registerEmail); // Pre-fill email for convenience
+        toast.success('Registration successful! Check your email to verify.', { duration: 4000 });
+        // Redirect to check email page
+        setTimeout(() => {
+          router.push(`/check-your-email?email=${encodeURIComponent(registerEmail)}`);
+        }, 1500);
       } else {
         toast.error('Registration failed: ' + (data.error || 'Unknown error'));
       }
@@ -243,6 +336,40 @@ export default function LoginSection() {
                   </div>
                 </form>
 
+                {/* Email Verification Reminder */}
+                {needsEmailVerification && (
+                  <div className="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <h3 className="text-sm font-medium text-yellow-800">📧 Email Verification Required</h3>
+                        <div className="mt-2 text-sm text-yellow-700">
+                          <p>Please check your inbox and click the verification link to activate your account.</p>
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={handleResendVerification}
+                            className="bg-yellow-50 px-3 py-2 rounded-md text-sm font-medium text-yellow-800 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-yellow-50 focus:ring-yellow-600 transition-colors"
+                          >
+                            Resend Email
+                          </button>
+                          <Link
+                            href="/resend-confirmation"
+                            className="bg-yellow-50 px-3 py-2 rounded-md text-sm font-medium text-yellow-800 hover:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-yellow-50 focus:ring-yellow-600 transition-colors"
+                          >
+                            Verification Page
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-10">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
@@ -279,25 +406,7 @@ export default function LoginSection() {
               </div>
 
               <div className="mt-8">
-                <form className="space-y-5" action="#" method="POST">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-900">
-                      Full Name
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        autoComplete="name"
-                        required
-                        className="block w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 shadow-sm focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] sm:text-sm"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  
+                <form className="space-y-6" action="#" method="POST">
                   <div>
                     <label htmlFor="register-email" className="block text-sm font-medium text-gray-900">
                       Email address

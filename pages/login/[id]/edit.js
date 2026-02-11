@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import EditProfile from '@/components/profile/EditProfile';
 import Loader from '@/components/Loader';
+import { API_ENDPOINTS } from '@/lib/api';
 
 // Dynamically imported components
 const Toaster = dynamic(() => import('react-hot-toast').then(mod => mod.Toaster), {
@@ -33,7 +34,7 @@ export default function EditProfilePage() {
     // Verify token is valid for this user
     const verifyAuth = async () => {
       try {
-        const response = await fetch('https://api.xclusivetouch.ca/api/verify-token', {
+        const response = await fetch(API_ENDPOINTS.verifyToken, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -62,7 +63,7 @@ export default function EditProfilePage() {
       if (!id) return;
       
       try {
-        const res = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
+        const res = await fetch(API_ENDPOINTS.profile(id));
         
         if (!res.ok) {
           setLoading(false);

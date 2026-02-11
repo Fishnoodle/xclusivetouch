@@ -1,8 +1,32 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import React, { useState, useEffect, memo, useCallback } from 'react';
+import PropTypes from 'prop-types';
+
+// Helper component for optimized profile image with fallback
+function OptimizedProfileImage({ src, alt }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  return (
+    <Image
+      src={imgSrc || "/assets/default-avatar.png"}
+      alt={alt}
+      className="absolute inset-0 w-full h-full object-cover"
+      fill
+      sizes="(max-width: 768px) 100vw, 33vw"
+      priority
+      onError={() => setImgSrc("/assets/default-avatar.png")}
+    />
+  );
+}
+
+OptimizedProfileImage.propTypes = {
+  src: PropTypes.string,
+  alt: PropTypes.string.isRequired,
+};
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import { API_ENDPOINTS } from '@/lib/api';
 import { 
   HiOutlineUser, 
   HiOutlineMail, 
@@ -25,17 +49,12 @@ import {
 // Layout components
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Loader from '@/components/Loader';
 
 // Dynamically imported components
 const Toaster = dynamic(() => import('react-hot-toast').then(mod => mod.Toaster), {
   ssr: false,
 });
 const RotatingLines = dynamic(() => import('react-loader-spinner').then(mod => mod.RotatingLines), {
-  ssr: false,
-});
-const MultiStepForm = dynamic(() => import('@/components/Onboarding'), {
-  loading: () => <Loader />,
   ssr: false,
 });
 
@@ -57,6 +76,7 @@ function LoginProfile() {
     profile: null,
     profilePic: null,
     username: "",
+    profileSlug: "",
     loading: true,
     initialLoadComplete: false  // New state to track initial load completion
   });
@@ -68,6 +88,14 @@ function LoginProfile() {
     
     // If no token or userId, redirect to login
     if (!token || !userId) {
+      console.log('No token or userId found, redirecting to login');
+      router.push('/login');
+      return;
+    }
+    
+    // Only verify if the URL userId matches stored userId
+    if (id && id !== userId) {
+      console.log('URL userId does not match stored userId, redirecting to login');
       router.push('/login');
       return;
     }
@@ -75,7 +103,7 @@ function LoginProfile() {
     // Verify token is valid for this user
     const verifyAuth = async () => {
       try {
-        const response = await fetch('https://api.xclusivetouch.ca/api/verify-token', {
+        const response = await fetch(API_ENDPOINTS.verifyToken, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -87,18 +115,22 @@ function LoginProfile() {
         
         if (data.status !== 'ok') {
           // Token invalid, redirect to login
+          console.log('Token invalid, redirecting to login');
           localStorage.removeItem('xclusiveToken');
           localStorage.removeItem('userId');
           router.push('/login');
         }
       } catch (error) {
         console.error('Auth verification error:', error);
-        router.push('/login');
+        // Only redirect to login if it's a real auth error, not a network issue
+        if (error.message.includes('401') || error.message.includes('403')) {
+          router.push('/login');
+        }
       }
     };
     
     verifyAuth();
-  }, [router]);
+  }, [router, id]);
 
   useEffect(() => {
     if (!id) {
@@ -108,7 +140,13 @@ function LoginProfile() {
 
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`https://api.xclusivetouch.ca/api/profile/${id}`);
+        const token = localStorage.getItem('xclusiveToken');
+        const res = await fetch(API_ENDPOINTS.profile(id), {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
         
         if (!res.ok) {
           setState(prev => ({ 
@@ -139,6 +177,7 @@ function LoginProfile() {
           profile: profileData,
           profilePic: profilePicture,
           username: data.data.username,
+          profileSlug: data.data.profileSlug || data.profileSlug || "",
           loading: false,
           initialLoadComplete: true  // Mark loading as complete
         }));
@@ -179,7 +218,21 @@ function LoginProfile() {
 
   // Only show MultiStepForm once initial load is complete AND profile is null
   if (!state.profile && state.initialLoadComplete) {
-    return <MultiStepForm />;
+    // If no profile exists, redirect to onboarding instead of showing form inline
+    router.push(`/login/${id}/onboarding`);
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#071013]">
+        <RotatingLines
+          visible={true}
+          height="96"
+          width="96"
+          strokeColor="#D4AF37"
+          strokeWidth="5"
+          animationDuration="0.75"
+          ariaLabel="rotating-lines-loading"
+        />
+      </div>
+    );
   }
 
   // Process social media links
@@ -211,14 +264,9 @@ function LoginProfile() {
               <div className="md:w-1/4 flex justify-center md:justify-start">
                 <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-[#D4AF37]/50 bg-[#D4AF37]/10 flex items-center justify-center relative">
                   {state.profilePic ? (
-                    <img 
+                    <OptimizedProfileImage
                       src={state.profilePic}
                       alt={`${state.profile.firstName || 'User'}'s profile picture`}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.onerror = null; // Prevent infinite loop
-                        e.target.src = "/assets/default-avatar.png"; // Fallback to default image
-                      }}
                     />
                   ) : (
                     <HiOutlineUser className="w-12 h-12 text-[#D4AF37]" />
@@ -258,7 +306,7 @@ function LoginProfile() {
         
         {/* Action Buttons */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <Link href={`/profile/${state.username}`} className="block">
+          <Link href={`/profile/${state.profileSlug || state.username}`} className="block">
             <button className="w-full py-4 px-6 bg-[#D4AF37] text-black rounded-xl font-medium transition-colors hover:bg-[#E5C158] flex items-center justify-center gap-3 shadow-lg">
               <HiOutlineEye className="w-6 h-6" />
               <span>View Public Profile</span>
@@ -278,8 +326,17 @@ function LoginProfile() {
         <section className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
           <div className="lg:col-span-6">
             <div className="bg-black/30 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg h-full">
-              <div className="relative h-48 sm:h-64">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/30 to-blue-900/30"></div>
+              <div className="relative h-48 sm:h-64 overflow-hidden">
+                {state.profilePic ? (
+                  <Image
+                    src={state.profilePic}
+                    alt="Profile preview"
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/30 to-blue-900/30"></div>
+                )}
                 <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
                   <div className="inline-flex items-center bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-[#D4AF37]" viewBox="0 0 20 20" fill="currentColor">

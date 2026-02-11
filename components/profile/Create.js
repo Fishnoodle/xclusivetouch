@@ -4,6 +4,7 @@ import { Select, MenuItem, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { API_ENDPOINTS } from '@/lib/api';
 
 // Disabled LinkedIn for now - until we can figure out how to save LinkedIn key
 const socialMediaOptions = ['Facebook', 'Instagram', 'Twitter', 'Youtube', 'Twitch', 'Other']
@@ -85,7 +86,7 @@ const Create = ({ id }) => {
             
             formData.append('socialMedia', JSON.stringify(socialMedia));
 
-            const response = await fetch('https://api.xclusivetouch.ca/api/profile', {
+            const response = await fetch(API_ENDPOINTS.createProfile, {
                 method: 'POST',
                 body: formData,
             });

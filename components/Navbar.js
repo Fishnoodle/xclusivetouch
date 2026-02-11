@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 
 export default function Navbar() {
-  const router = useRouter();
   const [nav, setNav] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileSlug, setProfileSlug] = useState('');
+  const [userName, setUserName] = useState('');
 
   const handleNav = () => {
     setNav(!nav);
@@ -16,17 +16,26 @@ export default function Navbar() {
   
   // Add logout function
   const handleLogout = () => {
+    // Clear all stored data
+    localStorage.removeItem('token');
     localStorage.removeItem('xclusiveToken');
     localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    
     toast.success('Successfully logged out');
-    router.push('/login');
-    setNav(false); // Close mobile menu if open
+    
+    // Redirect to login page
+    window.location.href = '/login';
   };
 
   // Check if user is logged in
   useEffect(() => {
     const token = localStorage.getItem('xclusiveToken');
+    const slug = localStorage.getItem('profileSlug');
+    const name = localStorage.getItem('userName');
     setIsLoggedIn(!!token); // Convert to boolean
+    if (slug) setProfileSlug(slug);
+    if (name) setUserName(name);
   }, []);
 
   // Add scroll effect
@@ -90,6 +99,17 @@ export default function Navbar() {
 
           {isLoggedIn ? (
             <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-lg border border-white/10">
+                <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
+                  <span className="text-[#D4AF37] text-sm font-semibold">
+                    {userName ? userName.charAt(0).toUpperCase() : 'U'}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">{userName || 'User'}</p>
+                  <p className="text-gray-400 text-xs">{profileSlug}</p>
+                </div>
+              </div>
               <Link href={`/login/${localStorage.getItem('userId')}`}>
                 <button className="px-6 py-2.5 bg-[#D4AF37] text-black text-sm font-medium rounded-md hover:bg-white transition-colors duration-300">
                   Dashboard
@@ -199,6 +219,10 @@ export default function Navbar() {
           <div className="mt-8 flex flex-col gap-4">
             {isLoggedIn ? (
               <>
+                <div className="px-4 py-3 bg-white/5 rounded-lg border border-white/10">
+                  <p className="text-white text-sm font-medium">{userName || 'User'}</p>
+                  <p className="text-gray-400 text-xs">{profileSlug}</p>
+                </div>
                 <Link 
                   href={`/login/${localStorage.getItem('userId')}`}
                   onClick={() => setNav(false)} 
