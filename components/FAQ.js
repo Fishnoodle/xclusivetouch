@@ -1,29 +1,8 @@
 import React from "react";
-import {
-  Accordion,
-  AccordionHeader,
-  AccordionBody,
-} from "@material-tailwind/react";
+import { Disclosure, Transition } from "@headlessui/react";
 import { FiChevronsDown } from "react-icons/fi";
 
 const FAQ = () => {
-    const [open, setOpen] = React.useState(1);
- 
-    const handleOpen = (value) => setOpen(open === value ? 0 : value);
-
-    // Custom icon component for the accordion
-    const customAnimation = {
-      mount: { scale: 1 },
-      unmount: { scale: 0.9 },
-    };
-
-    // Custom icon for the accordion
-    const customIcon = (id) => (
-      <FiChevronsDown 
-        className={`${open === id ? "rotate-180" : ""} h-5 w-5 transition-transform duration-300 text-[#D4AF37]`}
-      />
-    );
-
     return (
       <div className="container mx-auto py-16 px-6 md:px-8 lg:px-12">
         <div className="mx-auto text-center mb-12">
@@ -67,22 +46,30 @@ const FAQ = () => {
             }
           ].map((item) => (
             <div key={item.id} className="mb-4">
-              <Accordion
-                open={open === item.id}
-                icon={() => customIcon(item.id)}
-                animate={customAnimation}
-                className="border border-gray-200 rounded-lg overflow-hidden mb-4 hover:shadow-md transition-shadow duration-300"
-              >
-                <AccordionHeader 
-                  onClick={() => handleOpen(item.id)}
-                  className={`border-b-0 transition-colors ${open === item.id ? "text-[#D4AF37]" : "text-gray-900"} hover:text-[#D4AF37] p-5 flex justify-between text-lg font-medium`}
-                >
-                  {item.question}
-                </AccordionHeader>
-                <AccordionBody className="text-base text-gray-700 px-5 pb-5 pt-0">
-                  {item.answer}
-                </AccordionBody>
-              </Accordion>
+              <Disclosure>
+                {({ open }) => (
+                  <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300">
+                    <Disclosure.Button className={`w-full flex justify-between items-center p-5 text-left transition-colors ${open ? "text-[#D4AF37]" : "text-gray-900"} hover:text-[#D4AF37]`}>
+                      <span className="text-lg font-medium">{item.question}</span>
+                      <FiChevronsDown 
+                        className={`${open ? "rotate-180" : ""} h-5 w-5 transition-transform duration-300 text-[#D4AF37]`}
+                      />
+                    </Disclosure.Button>
+                    <Transition
+                      enter="transition duration-200 ease-out"
+                      enterFrom="transform scale-95 opacity-0"
+                      enterTo="transform scale-100 opacity-100"
+                      leave="transition duration-100 ease-out"
+                      leaveFrom="transform scale-100 opacity-100"
+                      leaveTo="transform scale-95 opacity-0"
+                    >
+                      <Disclosure.Panel className="px-5 pb-5 pt-2 text-gray-700">
+                        {item.answer}
+                      </Disclosure.Panel>
+                    </Transition>
+                  </div>
+                )}
+              </Disclosure>
             </div>
           ))}
         </div>
