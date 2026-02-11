@@ -1,5 +1,4 @@
 import React from "react";
-import Button from "@material-tailwind/react/components/Button"
 import Image from "next/image"
 import { useState, useEffect, useRef } from "react"
 import PropTypes from 'prop-types';
@@ -206,17 +205,17 @@ const Header = ({ profile, profilePictureUrl }) => {
         
           <div className="w-[90%] mx-auto -mt-16">
             <div className="flex justify-center items-center space-x-10">
-              <Button fullWidth variant="outlined" size="lg" className="text-sm" onClick={createVCard}>
+              <button className="w-full border-2 border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-semibold py-3 px-6 rounded-lg text-sm" onClick={createVCard}>
                 <span className="text-[60%]">Save Contact</span>
-              </Button>
-              <Button fullWidth variant="gradient" size="lg" className="text-sm" onClick={() => window.location.href = `sms:${phoneNumber}`}>
+              </button>
+              <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 font-semibold py-3 px-6 rounded-lg text-sm" onClick={() => window.location.href = `sms:${phoneNumber}`}>
                 <span className="text-[60%]">Message Contact</span>
-              </Button>
+              </button>
             </div>
             <div className="flex justify-center items-center mt-4">
-              <Button fullWidth variant="gradient" size="lg" className="text-sm" onClick={exchangeContact}>
+              <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 font-semibold py-3 px-6 rounded-lg text-sm" onClick={exchangeContact}>
                 <span className="text-[60%]">Exchange Profile</span>
-              </Button>
+              </button>
             </div>
           </div>
         
@@ -292,9 +291,9 @@ const Header = ({ profile, profilePictureUrl }) => {
                       />
                     </div>
                     <div className='flex justify-end'>
-                      <Button type='submit' variant='gradient' size='lg' className='text-sm' disabled={loading}>
+                      <button type='submit' className='bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 font-semibold py-2 px-6 rounded-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed' disabled={loading}>
                         {loading ? 'Loading...' : 'Send'}
-                      </Button>
+                      </button>
                     </div>
                   </form>
               </div>
