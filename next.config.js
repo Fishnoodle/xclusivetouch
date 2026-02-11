@@ -16,6 +16,10 @@ const nextConfig = {
   turbopack: {
     root: __dirname,
   },
+  output: 'standalone',
+  experimental: {
+    outputFileTracingRoot: __dirname,
+  },
 };
 
 module.exports = nextConfig;
